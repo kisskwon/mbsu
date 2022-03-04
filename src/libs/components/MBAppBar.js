@@ -6,14 +6,17 @@ import TvIcon from "@mui/icons-material/Tv";
 import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import NetworkInfoDialog from "../../components/NetworkInfoDialog";
 import { tvControlUtil } from "../../util/tvControlUtil";
 import MBDrawer from "./MBDrawer";
 import MBDrawerItem from "./MBDrawerItem";
 
 function MBAppBar(props) {
+  const navigate = useNavigate();
   const [showDrawer, setShowDrawer] = useState(false);
   const [showSideMenu, setShowSideMenu] = useState(false);
-  const navigate = useNavigate();
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -95,11 +98,15 @@ function MBAppBar(props) {
           >
             <MBDrawerItem
               title={"IP 설정"}
-              action={() => alert("IP 설정")}
+              action={() => setIsOpenDialog(true)}
               icon={<InboxIcon />}
             />
             <MBDrawerItem title={"설정"} icon={<MailIcon />} />
           </MBDrawer>
+          <NetworkInfoDialog
+            isOpen={isOpenDialog}
+            onComplete={() => setIsOpenDialog(false)}
+          />
         </>
       )}
     </>
