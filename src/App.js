@@ -1,6 +1,13 @@
+import { createTheme, ThemeProvider } from "@mui/material";
 import { useState } from "react";
-import "./App.css";
-import logo from "./logo.svg";
+import { HashRouter, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 function App() {
   const [inputText, setInputText] = useState();
@@ -15,16 +22,13 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <input value={inputText} onChange={onChange} />
-        <button onClick={callToast}>SEND</button>
-      </header>
-    </div>
+    <ThemeProvider theme={darkTheme}>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </HashRouter>
+    </ThemeProvider>
   );
 }
 
