@@ -1,9 +1,14 @@
 import MenuIcon from "@mui/icons-material/Menu";
 import TvIcon from "@mui/icons-material/Tv";
 import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
+import MBDrawer from "./MBDrawer";
 
 function MBAppBar() {
+  const [showDrawer, setShowDrawer] = useState(false);
+  const handleDrawer = (show) => {
+    setShowDrawer(show);
+  };
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -26,13 +31,16 @@ function MBAppBar() {
               edge="end"
               color="inherit"
               aria-label="menu"
-              onClick={() => {}}
+              onClick={() => {
+                setShowDrawer(true);
+              }}
             >
               <TvIcon />
             </IconButton>
           </Toolbar>
         </AppBar>
       </Box>
+      <MBDrawer open={showDrawer} onChange={setShowDrawer} />
     </>
   );
 }
