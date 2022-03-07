@@ -26,7 +26,12 @@ function MBAppBar(props) {
     const mac = localStorage.getItem("macAddr");
     const ip = localStorage.getItem("ipAddr");
     console.log("mac is ", mac, " ip is ", ip);
-    window.cordova.plugins.TVConnect.turnOn(mac, ip, (result) => {
+
+    let ips = ip.split(".");
+    ips[ips.length - 1] = "255";
+    let changeIp = ips.join(".");
+    console.log("change ip is ", changeIp);
+    window.cordova.plugins.TVConnect.turnOn(mac, changeIp, (result) => {
       console.log("turn on ok...", result);
     });
   };
