@@ -1,27 +1,28 @@
 import MailIcon from "@mui/icons-material/Mail";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import { tvControlUtil } from "../../util/tvControlUtil";
 
 const action1 = () => {
   alert("action 1");
 };
-const action2 = () => {
-  alert("action 2");
+const connect = () => {
+  tvControlUtil.connect();
 };
-const action3 = () => {
-  alert("action 3");
+const launchWebApp = () => {
+  tvControlUtil.launchWebApp();
 };
-const action4 = () => {
-  alert("action 4");
+const turnOffTV = () => {
+  tvControlUtil.turnOffTV();
 };
 const action5 = () => {
   alert("action 5");
 };
 const items = [
   { text: "TV에서 보기", action: action1 },
-  { text: "TV와 연결", action: action2 },
-  { text: "모닝브리핑 켜기", action: action3 },
-  { text: "TV 끄기", action: action4 },
+  { text: "TV와 연결", action: connect },
+  { text: "모닝브리핑 켜기", action: launchWebApp },
+  { text: "TV 끄기", action: turnOffTV },
   { text: "모바일에서 보기", action: action5 },
 ];
 
