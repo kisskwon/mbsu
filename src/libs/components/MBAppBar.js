@@ -22,6 +22,15 @@ function MBAppBar(props) {
   const [showSideMenu, setShowSideMenu] = useState(false);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
 
+  const turnOnTv = () => {
+    const mac = localStorage.getItem("macAddr");
+    const ip = localStorage.getItem("ipAddr");
+    console.log("mac is ", mac, " ip is ", ip);
+    window.cordova.plugins.TVConnect.turnOn(mac, ip, (result) => {
+      console.log("turn on ok...", result);
+    });
+  };
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -72,7 +81,7 @@ function MBAppBar(props) {
           >
             <MBDrawerItem
               title={"TV에서 보기"}
-              action={() => alert("action 1")}
+              action={() => turnOnTv()}
               icon={<ShowTvIcon />}
             />
             <MBDrawerItem
