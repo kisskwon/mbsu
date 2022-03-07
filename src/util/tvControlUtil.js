@@ -51,18 +51,17 @@ async function handleRegisteredResponse(message) {
 
   if (clientKey) {
     currentClientKey = clientKey;
-    window.localStorage.setItem(
-      "TV_CONNECT_CLIENT_KEY",
-      currentClientKey || ""
-    );
+    localStorage.setItem("TV_CONNECT_CLIENT_KEY", currentClientKey || "");
   }
 }
 
 const connect = async () => {
   console.log("connecting");
 
-  const tvIpAddrr = window.localStorage.getItem("ipaddr");
-  currentClientKey = window.localStorage.getItem("TV_CONNECT_CLIENT_KEY");
+  const tvIpAddrr = localStorage.getItem("ipAddr");
+  currentClientKey = localStorage.getItem("TV_CONNECT_CLIENT_KEY");
+  console.log("tvIpAddrr=", tvIpAddrr);
+
   try {
     ws = new WebSocket(`ws://${tvIpAddrr}:3000/`);
   } catch (e) {
@@ -122,7 +121,8 @@ const launchWebApp = () => {
       uri: "ssap://webapp/launchWebApp",
       payload: {
         webAppId: "test",
-        webAppUrl: "http://10.158.2.146:3001/webapp/index.html",
+        webAppUrl: "https://news.v.daum.net/v/20220306214002580",
+        // webAppUrl: "http://10.158.2.146:3001/webapp/index.html", // internal IP
       },
     })
   );
