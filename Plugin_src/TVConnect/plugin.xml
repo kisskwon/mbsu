@@ -20,5 +20,8 @@
       target="AndroidManifest.xml"></config-file>
     <source-file src="src/android/TVConnect.java"
       target-dir="src/com/lge/mbsu/tvconnect" />
+    <edit-config file="AndroidManifest.xml" target="/manifest/application" mode="merge">
+      <application android:usesCleartextTraffic="true" />
+    </edit-config>
   </platform>
 </plugin>
