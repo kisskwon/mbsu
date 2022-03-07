@@ -9,6 +9,12 @@
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <hook type="before_prepare" src="scripts/prebuild.js" />
-    <preference name="hostname" value="localhost" />
-    <preference name="AndroidInsecureFileModeEnabled" value="true" />
+
+    <platform name="android">
+        <preference name="hostname" value="localhost" />
+        <preference name="AndroidInsecureFileModeEnabled" value="true" />
+        <edit-config file="AndroidManifest.xml" target="/manifest/application" mode="merge">
+            <application android:usesCleartextTraffic="true" />
+        </edit-config>
+    </platform>
 </widget>
