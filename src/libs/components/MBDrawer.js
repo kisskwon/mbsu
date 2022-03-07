@@ -1,16 +1,29 @@
-import { Box, Drawer, Typography } from "@mui/material";
+import { Box, Drawer, List, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import * as React from "react";
+import React from "react";
 
 const useStyles = makeStyles(() => ({
-  paper: {
+  paperLeft: {
+    borderTopRightRadius: "18px",
+    borderBottomRightRadius: "18px",
+  },
+  paperBottom: {
     borderTopLeftRadius: "18px",
     borderTopRightRadius: "18px",
   },
 }));
 
-export default function MBDrawer(props) {
+function MBDrawer(props) {
   const classes = useStyles();
+  let paper = {};
+  switch (props.anchor) {
+    case "bottom":
+      paper = classes.paperBottom;
+      break;
+    case "left":
+      paper = classes.paperLeft;
+      break;
+  }
   const toggleDrawer = (toggle) => (event) => {
     if (
       event.type === "keydown" &&
@@ -25,26 +38,30 @@ export default function MBDrawer(props) {
   return (
     <React.Fragment>
       <Drawer
-        anchor={"bottom"}
+        anchor={props.anchor}
         open={props.open}
         onClose={toggleDrawer(false)}
-        classes={{ paper: classes.paper }}
-        sx={{
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
-        }}
+        classes={{ paper: paper }}
       >
         <Box sx={{ p: 2, pb: 1 }}>
-          <Typography sx={{ fontSize: 18 }}>{props.data.title}</Typography>
+          <Typography sx={{ fontSize: 18 }}>{props.title}</Typography>
         </Box>
         <Box
+          sx={{
+            width:
+              props.anchor === "top" || props.anchor === "bottom"
+                ? "auto"
+                : 250,
+          }}
           role="presentation"
           onClick={toggleDrawer(false)}
           onKeyDown={toggleDrawer(false)}
         >
-          {props.data.list()}
+          <List sx={{ py: 0 }}>{props.children}</List>
         </Box>
       </Drawer>
     </React.Fragment>
   );
 }
+
+export default MBDrawer;

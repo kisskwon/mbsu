@@ -1,11 +1,14 @@
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import BackIcon from "@mui/icons-material/ArrowBack";
+import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
 import TvIcon from "@mui/icons-material/Tv";
 import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { tvControlUtil } from "../../util/tvControlUtil";
 import MBDrawer from "./MBDrawer";
-import MBSideMenu from "./MBSideMenu";
+import MBDrawerItem from "./MBDrawerItem";
 
 function MBAppBar(props) {
   const [showDrawer, setShowDrawer] = useState(false);
@@ -30,12 +33,12 @@ function MBAppBar(props) {
                 }
               }}
             >
-              {props.sub ? <ArrowBackIcon /> : <MenuIcon />}
+              {props.sub ? <BackIcon /> : <MenuIcon />}
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               {props.title}
             </Typography>
-            {props.drawer && (
+            {!props.sub && (
               <IconButton
                 size="large"
                 edge="end"
@@ -51,19 +54,53 @@ function MBAppBar(props) {
           </Toolbar>
         </AppBar>
       </Box>
-      {props.drawer && (
-        <MBDrawer
-          open={showDrawer}
-          onChange={setShowDrawer}
-          data={props.drawer}
-        />
-      )}
-      {props.sideMenu && (
-        <MBSideMenu
-          open={showSideMenu}
-          onChange={setShowSideMenu}
-          data={props.sideMenu}
-        />
+      {!props.sub && (
+        <>
+          <MBDrawer
+            anchor="bottom"
+            title={"미리보기"}
+            open={showDrawer}
+            onChange={setShowDrawer}
+          >
+            <MBDrawerItem
+              title={"TV에서 보기"}
+              action={() => alert("action 1")}
+              icon={<InboxIcon />}
+            />
+            <MBDrawerItem
+              title={"TV와 연결"}
+              action={() => tvControlUtil.connect()}
+              icon={<MailIcon />}
+            />
+            <MBDrawerItem
+              title={"모닝브리핑 켜기"}
+              action={() => tvControlUtil.launchWebApp()}
+              icon={<InboxIcon />}
+            />
+            <MBDrawerItem
+              title={"TV 끄기"}
+              action={() => tvControlUtil.turnOffTV()}
+              icon={<MailIcon />}
+            />
+            <MBDrawerItem
+              title={"모바일에서 보기"}
+              action={() => alert("action 5")}
+              icon={<InboxIcon />}
+            />
+          </MBDrawer>
+          <MBDrawer
+            anchor="left"
+            open={showSideMenu}
+            onChange={setShowSideMenu}
+          >
+            <MBDrawerItem
+              title={"IP 설정"}
+              action={() => alert("IP 설정")}
+              icon={<InboxIcon />}
+            />
+            <MBDrawerItem title={"설정"} icon={<MailIcon />} />
+          </MBDrawer>
+        </>
       )}
     </>
   );
