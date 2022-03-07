@@ -40,6 +40,7 @@ function handleResponse(message) {
   var id = "" + message.id;
 
   if (message.type === "registered") {
+    showToast("registered!!");
     noOutput = handleRegisteredResponse(message);
   }
 
@@ -56,11 +57,9 @@ async function handleRegisteredResponse(message) {
 }
 
 const connect = async () => {
-  console.log("connecting");
-
   const tvIpAddrr = localStorage.getItem("ipAddr");
   currentClientKey = localStorage.getItem("TV_CONNECT_CLIENT_KEY");
-  console.log("tvIpAddrr=", tvIpAddrr);
+  showToast("connecting...", tvIpAddrr);
 
   try {
     ws = new WebSocket(`ws://${tvIpAddrr}:3000/`);
@@ -95,25 +94,26 @@ const connect = async () => {
   ws.onmessage = function (event) {
     try {
       var message = JSON.parse(event.data);
-      console.log("onmessage:", message);
+      showToast("onmessage:", message);
       handleResponse(message);
     } catch (e) {
-      console.log("Receive response: JSON parse error");
+      showToast("Receive response: JSON parse error");
     }
   };
 
   ws.onerror = function (event) {
-    console.log("websocket error", event);
+    showToast("websocket error", event);
   };
 
   ws.onclose = function (event) {
-    console.log("connection closed", event);
+    showToast("connection closed", event);
   };
 
   return ws;
 };
 
 const launchWebApp = () => {
+  showToast("launchWebApp");
   ws.send(
     JSON.stringify({
       type: "subscribe",
@@ -121,14 +121,14 @@ const launchWebApp = () => {
       uri: "ssap://webapp/launchWebApp",
       payload: {
         webAppId: "test",
-        webAppUrl: "https://news.v.daum.net/v/20220306214002580",
-        // webAppUrl: "http://10.158.2.146:3001/webapp/index.html", // internal IP
+        webAppUrl: "http://10.158.2.146:3001/webapp/index.html",
       },
     })
   );
 };
 
 const turnOffTV = () => {
+  showToast("turnOffTV");
   ws.send(
     JSON.stringify({
       type: "subscribe",
@@ -143,3 +143,16 @@ export const tvControlUtil = {
   launchWebApp,
   turnOffTV,
 };
+
+function showToast(msg, param) {
+  if (param) {
+    console.log(msg, param);
+  } else {
+    console.log(msg);
+  }
+  try {
+    window.cordova.plugins.TVConnect.toast(
+      msg + (param ? JSON.stringify(param) : "")
+    );
+  } catch (error) {}
+}
