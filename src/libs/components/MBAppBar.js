@@ -5,9 +5,11 @@ import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MBDrawer from "./MBDrawer";
+import MBSideMenu from "./MBSideMenu";
 
 function MBAppBar(props) {
   const [showDrawer, setShowDrawer] = useState(false);
+  const [showSideMenu, setShowSideMenu] = useState(false);
   const navigate = useNavigate();
   return (
     <>
@@ -20,7 +22,13 @@ function MBAppBar(props) {
               color="inherit"
               aria-label="menu"
               sx={{ mr: 2 }}
-              onClick={() => navigate(-1)}
+              onClick={() => {
+                if (props.sub) {
+                  navigate(-1);
+                } else {
+                  setShowSideMenu(true);
+                }
+              }}
             >
               {props.sub ? <ArrowBackIcon /> : <MenuIcon />}
             </IconButton>
@@ -48,6 +56,13 @@ function MBAppBar(props) {
           open={showDrawer}
           onChange={setShowDrawer}
           data={props.drawer}
+        />
+      )}
+      {props.sideMenu && (
+        <MBSideMenu
+          open={showSideMenu}
+          onChange={setShowSideMenu}
+          data={props.sideMenu}
         />
       )}
     </>

@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import { CardContent, Paper, Typography } from "@mui/material";
 import React from "react";
 import { MainDrawer } from "../components/drawer/MainDrawer";
+import { SideMenuDrawer } from "../components/drawer/SideMenuDrawer";
 import MBAppBar from "../libs/components/MBAppBar";
 import MBCard from "../libs/components/MBCard";
 
@@ -12,7 +13,11 @@ const StyledPaper = styled(Paper)(() => ({
 function Home(props) {
   return (
     <>
-      <MBAppBar title={"모닝브리핑 블랙"} drawer={MainDrawer} />
+      <MBAppBar
+        title={"모닝브리핑 블랙"}
+        drawer={MainDrawer}
+        sideMenu={SideMenuDrawer}
+      />
       <StyledPaper square>
         <MBCard title="알림 설정" action="알림" to="/alarm">
           <CardContent sx={{ py: 1 }}>

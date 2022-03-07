@@ -1,15 +1,15 @@
 import { Box, Drawer, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import * as React from "react";
+import React from "react";
 
 const useStyles = makeStyles(() => ({
   paper: {
-    borderTopLeftRadius: "18px",
     borderTopRightRadius: "18px",
+    borderBottomRightRadius: "18px",
   },
 }));
 
-export default function MBDrawer(props) {
+function MBSideMenu({ open, onChange, data }) {
   const classes = useStyles();
   const toggleDrawer = (toggle) => (event) => {
     if (
@@ -19,14 +19,14 @@ export default function MBDrawer(props) {
       return;
     }
 
-    props.onChange(toggle);
+    onChange(toggle);
   };
 
   return (
     <React.Fragment>
       <Drawer
-        anchor={"bottom"}
-        open={props.open}
+        anchor={"left"}
+        open={open}
         onClose={toggleDrawer(false)}
         classes={{ paper: classes.paper }}
         sx={{
@@ -35,16 +35,19 @@ export default function MBDrawer(props) {
         }}
       >
         <Box sx={{ p: 2, pb: 1 }}>
-          <Typography sx={{ fontSize: 18 }}>{props.data.title}</Typography>
+          <Typography sx={{ fontSize: 18 }}>{data.title}</Typography>
         </Box>
         <Box
+          sx={{ width: 250 }}
           role="presentation"
           onClick={toggleDrawer(false)}
           onKeyDown={toggleDrawer(false)}
         >
-          {props.data.list()}
+          {data.list()}
         </Box>
       </Drawer>
     </React.Fragment>
   );
 }
+
+export default MBSideMenu;

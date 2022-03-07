@@ -18,29 +18,30 @@ const action5 = () => {
   alert("action 5");
 };
 const items = [
-  {text:"TV에서 보기", action:action1},
-  {text:"TV와 연결", action:action2},
-  {text:"모닝브리핑 켜기", action:action3},
-  {text:"TV 끄기", action:action4},
-  {text:"모바일에서 보기", action:action5},
+  { text: "TV에서 보기", action: action1 },
+  { text: "TV와 연결", action: action2 },
+  { text: "모닝브리핑 켜기", action: action3 },
+  { text: "TV 끄기", action: action4 },
+  { text: "모바일에서 보기", action: action5 },
 ];
 
 export const MainDrawer = {
   title: "미리보기",
-  list: (
-    <List sx={{ py: 0 }}>
-      {items.map((item, index) => (
-        <ListItem button key={item.text}
-          onClick={item.action}>
-          <ListItemIcon>
-            {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-          </ListItemIcon>
-          <ListItemText
-            primary={item.text}
-            secondary={index === 0 ? "UJ6600" : ""}
-          />
-        </ListItem>
-      ))}
-    </List>
-  ),
+  list: function () {
+    return (
+      <List sx={{ py: 0 }}>
+        {items.map((item, index) => (
+          <ListItem button key={item.text} onClick={item.action}>
+            <ListItemIcon>
+              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+            </ListItemIcon>
+            <ListItemText
+              primary={item.text}
+              secondary={index === 0 ? "UJ6600" : ""}
+            />
+          </ListItem>
+        ))}
+      </List>
+    );
+  },
 };
