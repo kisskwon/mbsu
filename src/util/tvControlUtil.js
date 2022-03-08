@@ -127,6 +127,37 @@ const launchWebApp = () => {
   );
 };
 
+const launchWebAppOverlay = () => {
+  showToast("launchWebAppOverlay");
+  ws.send(
+    JSON.stringify({
+      type: "request",
+      id: 1,
+      uri: "ssap://webapp/launchWebApp",
+      payload: {
+        webAppId: "test-web-app",
+        webAppUrl:
+          "https://c2c-tvtest.s3.ap-northeast-2.amazonaws.com/webapp/index.html",
+        appInfo: {
+          title: "tv poc",
+          transparent: true,
+          defaultWindowType: "overlay",
+          vendorExtension: {
+            backgroundColor: "00FFFFFF",
+            resolution: "1920x1080",
+            enableKeyboard: true,
+            loadingMessage: true,
+            allowCrossDomain: false,
+          },
+        },
+        params: {
+          noLoadingSplash: true,
+        },
+      },
+    })
+  );
+};
+
 const turnOffTV = () => {
   showToast("turnOffTV");
   ws.send(
@@ -141,6 +172,7 @@ const turnOffTV = () => {
 export const tvControlUtil = {
   connect,
   launchWebApp,
+  launchWebAppOverlay,
   turnOffTV,
 };
 

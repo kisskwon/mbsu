@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Memo from "./pages/Memo";
 import NaviSetting from "./pages/NaviSetting";
 import Slogan from "./pages/Slogan";
+import Talk from "./pages/Talk";
 import Weather from "./pages/Weather";
 
 const darkTheme = createTheme({
@@ -59,6 +60,7 @@ const AppRoutes = () => {
     { path: "/calendar", element: <Calendar /> },
     { path: "/car", element: <Car /> },
     { path: "/slogan", element: <Slogan /> },
+    { path: "/talk", element: <Talk /> },
   ]);
   return routes;
 };
