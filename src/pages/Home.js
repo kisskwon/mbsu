@@ -28,6 +28,13 @@ function Home(props) {
             </Typography>
           </CardContent>
         </MBCard>
+        <MBCard action="토크" to="/talk">
+          <CardContent>
+            <Typography variant="subtitle2" color={"text.secondary"}>
+              띵큐토크
+            </Typography>
+          </CardContent>
+        </MBCard>
         <MBCard title="기본 위젯 설정" action="날씨" to="/weather">
           <CardContent>
             <Typography variant="subtitle2" color={"text.secondary"}>
