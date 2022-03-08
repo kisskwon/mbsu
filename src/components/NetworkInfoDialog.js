@@ -12,7 +12,7 @@ const NetworkInfoDialog = ({ isOpen, onComplete }) => {
     useRecoilState(tvNetworkInformation); */
   //console.log("isOpen " + isOpen);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
-  const [macAddr, setMacAddr] = useState("");
+  const [macAddr, setMacAddr] = useState();
   const [ipAddr, setIpAddr] = useState("");
 
   useEffect(() => {
@@ -75,7 +75,9 @@ const NetworkInfoDialog = ({ isOpen, onComplete }) => {
             maxLength="17"
             fullWidth
             variant="outlined"
-            defaultValue={localStorage.getItem("macAddr")}
+            defaultValue={
+              localStorage.getItem("macAddr") || "FF:FF:FF:FF:FF:FF"
+            }
             onChange={macAddrChanged}
           />
           <TextField
