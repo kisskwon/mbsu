@@ -33,6 +33,7 @@ function MBAppBar(props) {
     console.log("change ip is ", changeIp);
     window.cordova.plugins.TVConnect.turnOn(mac, changeIp, (result) => {
       console.log("turn on ok...", result);
+      window.cordova.plugins.TVConnect.toast("TV를 켰어요.");
     });
   };
 
