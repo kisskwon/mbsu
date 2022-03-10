@@ -8,6 +8,7 @@ import Car from "./pages/Car";
 import Home from "./pages/Home";
 import Memo from "./pages/Memo";
 import NaviSetting from "./pages/NaviSetting";
+import RegionSearch from "./pages/RegionSearch";
 import Slogan from "./pages/Slogan";
 import Talk from "./pages/Talk";
 import Weather from "./pages/Weather";
@@ -61,6 +62,7 @@ const AppRoutes = () => {
     { path: "/car", element: <Car /> },
     { path: "/slogan", element: <Slogan /> },
     { path: "/talk", element: <Talk /> },
+    { path: "/regionSearch", element: <RegionSearch /> },
   ]);
   return routes;
 };
