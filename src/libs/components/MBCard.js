@@ -37,20 +37,6 @@ function MBCard(props) {
           sx={{ p: 2 }}
         >
           <CardActions sx={{ p: 0 }}>
-            {props.label && (
-              <Typography
-                color={"Gray"}
-                sx={{ fontSize: 15 }}
-                style={{
-                  borderRadius: "15px",
-                  paddingLeft: "10px",
-                  paddingRight: "10px",
-                  backgroundColor: "cyan",
-                }}
-              >
-                {props.label}
-              </Typography>
-            )}
             <Typography color={"text.primary"} sx={{ fontSize: 20 }}>
               {props.action}
             </Typography>
