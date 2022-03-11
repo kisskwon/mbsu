@@ -8,12 +8,13 @@ import Checkbox from "@mui/material/Checkbox";
 import { cyan } from "@mui/material/colors";
 import Divider from "@mui/material/Divider";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import FormGroup from "@mui/material/FormGroup";
 import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import React from "react";
+import krLocale from "date-fns/locale/ko";
+import cloneDeep from "lodash/cloneDeep";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MBAppBar from "../libs/components/MBAppBar";
 import MBSubCard from "../libs/components/MBSubCard";
 
@@ -36,13 +37,90 @@ const DescText2nd = styled.div`
 `;
 
 function AlarmSetting(props) {
-  const [value, setValue] = React.useState(
-    new Date("2018-01-01T00:00:00.000Z")
-  );
-  const [selectedValue, setSelectedValue] = React.useState("a");
+  const navigate = useNavigate();
 
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
+  const [time, setTime] = useState();
+  const [holidayChecked, setHolidayChecked] = useState(
+    localStorage.getItem("alarmHoliday") === "true"
+  );
+
+  useEffect(() => {
+    let date = new Date();
+    let savedTime = localStorage.getItem("alarmTime");
+    if (savedTime === undefined) {
+      date.setHours(7);
+      date.setMinutes(0);
+      date.setSeconds(0);
+    } else {
+      date = new Date(JSON.parse(savedTime));
+      date.setSeconds(0);
+    }
+    setTime(date);
+
+    let savedDay = JSON.parse(localStorage.getItem("alarmDay"));
+    setDayList(savedDay);
+  }, []);
+
+  const [dayList, setDayList] = useState([
+    {
+      index: 0,
+      title: "Mon",
+      checked: true,
+    },
+    {
+      index: 1,
+      title: "Tue",
+      checked: true,
+    },
+    {
+      index: 2,
+      title: "Wed",
+      checked: true,
+    },
+    {
+      index: 3,
+      title: "Thu",
+      checked: true,
+    },
+    {
+      index: 4,
+      title: "Fri",
+      checked: true,
+    },
+    {
+      index: 5,
+      title: "Sat",
+      checked: false,
+    },
+    {
+      index: 6,
+      title: "Sun",
+      checked: false,
+    },
+  ]);
+
+  const onDayChanged = async (index) => {
+    const beforeDayList = cloneDeep(dayList);
+    let tempDayList = dayList.map((item, i) => {
+      if (index === i) {
+        return { ...item, checked: !item.checked };
+      } else {
+        return item;
+      }
+    });
+    setDayList(tempDayList);
+  };
+
+  const handleHolidayChange = (event) => {
+    setHolidayChecked(event.target.checked);
+  };
+
+  const handleSave = () => {
+    localStorage.setItem("alarmTime", JSON.stringify(time));
+    localStorage.setItem("alarmDay", JSON.stringify(dayList));
+    localStorage.setItem("alarmHoliday", holidayChecked);
+
+    console.log("alarmDay " + JSON.stringify(dayList));
   };
 
   return (
@@ -55,12 +133,14 @@ function AlarmSetting(props) {
           <CardContent sx={{ pt: 2 }}>
             <LocalizationProvider
               dateAdapter={AdapterDateFns}
+              locale={krLocale}
               style={{ paddingTop: "0px" }}
             >
               <MobileTimePicker
-                value={value}
+                value={time}
                 onChange={(newValue) => {
-                  setValue(newValue);
+                  console.log("time changed" + JSON.stringify(newValue));
+                  setTime(newValue);
                 }}
                 renderInput={(params) => (
                   <TextField {...params} sx={{ minWidth: "100%" }} />
@@ -71,71 +151,35 @@ function AlarmSetting(props) {
         </MBSubCard>
         <MBSubCard title="요일 설정">
           <CardContent sx={{ pt: 2 }}>
-            <FormGroup row>
-              <FormControlLabel
-                control={<Checkbox defaultChecked />}
-                label="월"
-                labelPlacement="bottom"
-                sx={{ m: 0 }}
-              />
-              <FormControlLabel
-                control={<Checkbox defaultChecked />}
-                label="화"
-                labelPlacement="bottom"
-                sx={{ m: 0 }}
-              />
-              <FormControlLabel
-                control={<Checkbox defaultChecked />}
-                label="수"
-                labelPlacement="bottom"
-                sx={{ m: 0 }}
-              />
-              <FormControlLabel
-                control={<Checkbox defaultChecked />}
-                label="목"
-                labelPlacement="bottom"
-                sx={{ m: 0 }}
-              />
-              <FormControlLabel
-                control={<Checkbox defaultChecked />}
-                label="금"
-                labelPlacement="bottom"
-                sx={{ m: 0 }}
-              />
-              <FormControlLabel
-                control={<Checkbox />}
-                label="토"
-                labelPlacement="bottom"
-                sx={{ m: 0 }}
-              />
-              <FormControlLabel
-                control={<Checkbox />}
-                label="일"
-                labelPlacement="bottom"
-                sx={{ m: 0 }}
-              />
-            </FormGroup>
+            <Stack
+              direction="row"
+              justifyContent="space-evenly"
+              alignItems="center"
+            >
+              {dayList.map((item, index) => (
+                <FormControlLabel
+                  key={index}
+                  control={<Checkbox checked={item.checked} />}
+                  label={item.title}
+                  labelPlacement="bottom"
+                  onChange={() => onDayChanged(index)}
+                />
+              ))}
+            </Stack>
           </CardContent>
           <Divider variant="middle" />
           <CardContent>
-            <Radio
-              checked={selectedValue === "a"}
-              onChange={handleChange}
-              value="a"
-              name="radio-buttons"
-              inputProps={{ "aria-label": "A" }}
-            />
+            <Checkbox checked={holidayChecked} onChange={handleHolidayChange} />
             공휴일에는 알람끄기
           </CardContent>
         </MBSubCard>
         <MBSubCard title="자동 종료 시간 설정">
           <CardContent sx={{ pt: 2 }}>
             종료 시간을 설정하시면 모닝브리핑이 자동으로 종료돼요.
-            <RadioGroup
-              // aria-labelledby="terminate_time_set"
-              defaultValue="female"
-              name="terminate_time_group"
-              row
+            <Stack
+              direction="row"
+              justifyContent="space-evenly"
+              alignItems="center"
             >
               <FormControlLabel
                 value="5m"
@@ -189,7 +233,7 @@ function AlarmSetting(props) {
                 }
                 label="20분"
               />
-            </RadioGroup>
+            </Stack>
           </CardContent>
         </MBSubCard>
       </StyledPaper>
@@ -203,14 +247,20 @@ function AlarmSetting(props) {
           bottom: 0,
           left: 0,
           right: 0,
-          minHeight: 50,
+          minHeight: 56,
           bgcolor: "#1d1d1d",
         }}
       >
-        <Button variant="text" sx={{ fontWeight: "bold" }}>
+        <Button
+          variant="text"
+          sx={{ fontWeight: "bold" }}
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
           취소
         </Button>
-        <Button variant="text" sx={{ fontWeight: "bold" }}>
+        <Button variant="text" sx={{ fontWeight: "bold" }} onClick={handleSave}>
           저장
         </Button>
       </Stack>
