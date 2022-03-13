@@ -94,6 +94,7 @@ const connect = async () => {
   ws.onmessage = function (event) {
     try {
       var message = JSON.parse(event.data);
+      console.log(message);
       showToast("onmessage:", message);
       handleResponse(message);
     } catch (e) {
@@ -127,6 +128,38 @@ const launchWebApp = () => {
   );
 };
 
+const launchYoutube = () => {
+  showToast("launchYoutube");
+  ws.send(
+    JSON.stringify({
+      type: "request",
+      id: 1,
+      uri: "ssap://system.launcher/launch",
+      payload: {
+        id: "youtube.leanback.v4",
+        contentId:
+          "ioNng23DkIM&pairingCode=bcdc8ebd-ba95-48a8-b61b-16c55b2fb544&t=0.0",
+        params: {
+          contentId:
+            "ioNng23DkIM&pairingCode=bcdc8ebd-ba95-48a8-b61b-16c55b2fb544&t=0.0",
+        },
+      },
+    })
+  );
+};
+
+const closeWebAppOverlay = () => {
+  showToast("closeWebAppOverlay");
+  ws.send(
+    JSON.stringify({
+      type: "request",
+      id: 1,
+      uri: "ssap://webapp/closeWebApp",
+      payload: { webAppId: "test-web-app" },
+    })
+  );
+};
+
 const launchWebAppOverlay = () => {
   showToast("launchWebAppOverlay");
   ws.send(
@@ -136,8 +169,7 @@ const launchWebAppOverlay = () => {
       uri: "ssap://webapp/launchWebApp",
       payload: {
         webAppId: "test-web-app",
-        webAppUrl:
-          "https://c2c-tvtest.s3.ap-northeast-2.amazonaws.com/webapp/index.html",
+        webAppUrl: "https://kisskwon.github.io/thinq_talk/",
         appInfo: {
           title: "tv poc",
           transparent: true,
@@ -173,6 +205,8 @@ export const tvControlUtil = {
   connect,
   launchWebApp,
   launchWebAppOverlay,
+  closeWebAppOverlay,
+  launchYoutube,
   turnOffTV,
 };
 

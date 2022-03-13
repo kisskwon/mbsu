@@ -20,10 +20,10 @@ function Talk(props) {
           <ListItem button onClick={() => tvControlUtil.launchWebAppOverlay()}>
             <ListItemText primary={"Text Only"} />
           </ListItem>
-          <ListItem button onClick={() => tvControlUtil.launchWebAppOverlay()}>
-            <ListItemText primary={"Text + Image"} />
+          <ListItem button onClick={() => tvControlUtil.closeWebAppOverlay()}>
+            <ListItemText primary={"close webapp"} />
           </ListItem>
-          <ListItem button onClick={() => tvControlUtil.launchWebAppOverlay()}>
+          <ListItem button onClick={() => tvControlUtil.launchYoutube()}>
             <ListItemText primary={"Text + Youtube"} />
           </ListItem>
         </List>
