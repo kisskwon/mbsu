@@ -100,10 +100,10 @@ public class TVConnect extends CordovaPlugin {
         Log.e("2MB", "2MB startThinqGallery args " + args);
 
         try {
-            Intent launchIntent = callbackContext.getPackageManager().getLaunchIntentForPackage("com.example.damda_gallery");
-            callbackContext.startActivity( launchIntent );
+            Intent launchIntent = cordova.getContext().getPackageManager().getLaunchIntentForPackage("com.example.damda_gallery");
+            cordova.getContext().startActivity( launchIntent );
 
-            Log.i("2MB", "startThinqGallery sent.");
+            Log.i("2MB", "2MB Wake-on-LAN packet sent.");
             callbackContext.success("2MB startThinqGallery packet sent.");
         } catch(Exception e){
             Log.i("2MB", "2MB Exception thrown.");
