@@ -5,6 +5,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import AlarmSetting from "./pages/AlarmSetting";
 import Calendar from "./pages/Calendar";
 import Car from "./pages/Car";
+import Gallery from "./pages/Gallery";
 import Home from "./pages/Home";
 import Memo from "./pages/Memo";
 import NaviSetting from "./pages/NaviSetting";
@@ -63,6 +64,7 @@ const AppRoutes = () => {
     { path: "/slogan", element: <Slogan /> },
     { path: "/talk", element: <Talk /> },
     { path: "/regionSearch", element: <RegionSearch /> },
+    { path: "/gallery", element: <Gallery /> },
   ]);
   return routes;
 };

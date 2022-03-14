@@ -82,6 +82,13 @@ function Home(props) {
             </Typography>
           </CardContent>
         </MBCard>
+        <MBCard action="TV액자" to="/gallery">
+          <CardContent>
+            <Typography variant="subtitle2" color={"text.secondary"}>
+              TV액자
+            </Typography>
+          </CardContent>
+        </MBCard>
       </StyledPaper>
     </>
   );

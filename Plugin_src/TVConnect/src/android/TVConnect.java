@@ -12,6 +12,8 @@ import org.json.JSONException;
 import android.util.Log;
 import android.widget.Toast;
 
+import android.content.Intent;
+
 /**
  * This class echoes a string called from JavaScript.
  */
@@ -19,12 +21,16 @@ public class TVConnect extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+        Log.e("2MB", "TVConnect = execute" + args);
         if (action.equals("toast")) {
             String message = args.getString(0);
             this.showToast(message, callbackContext);
             return true;
         } else if (action.equals("turnOn")) {
             startCallUp(args, callbackContext);
+            return true;
+        } else if (action.equals("startThinqGallery")) {
+            startThinqGallery(args, callbackContext);
             return true;
         }
         return false;
@@ -88,5 +94,20 @@ public class TVConnect extends CordovaPlugin {
             }
 
         return;
+    }
+
+    private void startThinqGallery(final JSONArray args, final CallbackContext callbackContext) {
+        Log.e("2MB", "2MB startThinqGallery args " + args);
+
+        try {
+            Intent launchIntent = callbackContext.getPackageManager().getLaunchIntentForPackage("com.example.damda_gallery");
+            callbackContext.startActivity( launchIntent );
+
+            Log.i("2MB", "startThinqGallery sent.");
+            callbackContext.success("2MB startThinqGallery packet sent.");
+        } catch(Exception e){
+            Log.i("2MB", "2MB Exception thrown.");
+            callbackContext.error("2MB error");
+        }
     }
 }

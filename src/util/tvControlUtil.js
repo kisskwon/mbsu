@@ -113,7 +113,9 @@ const connect = async () => {
   return ws;
 };
 
-const launchWebApp = () => {
+const launchWebApp = (
+  webAppUrl = "http://10.158.2.146:3001/webapp/index.html"
+) => {
   showToast("launchWebApp");
   ws.send(
     JSON.stringify({
@@ -122,7 +124,7 @@ const launchWebApp = () => {
       uri: "ssap://webapp/launchWebApp",
       payload: {
         webAppId: "test",
-        webAppUrl: "http://10.158.2.146:3001/webapp/index.html",
+        webAppUrl,
       },
     })
   );
