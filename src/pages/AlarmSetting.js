@@ -47,7 +47,7 @@ function AlarmSetting(props) {
   useEffect(() => {
     let date = new Date();
     let savedTime = localStorage.getItem("alarmTime");
-    if (savedTime === undefined) {
+    if (savedTime === null) {
       date.setHours(7);
       date.setMinutes(0);
       date.setSeconds(0);
@@ -57,8 +57,10 @@ function AlarmSetting(props) {
     }
     setTime(date);
 
-    let savedDay = JSON.parse(localStorage.getItem("alarmDay"));
-    setDayList(savedDay);
+    let savedDay = localStorage.getItem("alarmDay");
+    if (savedDay !== null) {
+      setDayList(JSON.parse(savedDay));
+    }
   }, []);
 
   const [dayList, setDayList] = useState([
