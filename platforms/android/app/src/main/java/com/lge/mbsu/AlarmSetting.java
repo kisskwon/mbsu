@@ -78,6 +78,9 @@ public class AlarmSetting {
         Log.e("2MB", "hour : " + hourTime + " min :" + minuteTime);
         Log.e("2MB", "currentTime : " + currentTime + " triggerTime :" + triggerTime + " interval : " + interval);
 
-        mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, triggerTime, interval, mPendingIntent);
+        //mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, triggerTime, interval, mPendingIntent);
+
+        AlarmManager.AlarmClockInfo info = new AlarmManager.AlarmClockInfo(triggerTime, null);
+        mAlarmManager.setAlarmClock(info, mPendingIntent);
     }
 }
