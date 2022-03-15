@@ -122,7 +122,8 @@ function AlarmSetting(props) {
     localStorage.setItem("alarmDay", JSON.stringify(dayList));
     localStorage.setItem("alarmHoliday", holidayChecked);
 
-    console.log("alarmDay " + JSON.stringify(dayList));
+    window.cordova.plugins.TVConnect.toast("저장되었습니다.");
+    navigate(-1);
   };
 
   return (
@@ -152,7 +153,7 @@ function AlarmSetting(props) {
           </CardContent>
         </MBSubCard>
         <MBSubCard title="요일 설정">
-          <CardContent sx={{ pt: 2 }}>
+          <CardContent>
             <Stack
               direction="row"
               justifyContent="space-evenly"
@@ -165,6 +166,7 @@ function AlarmSetting(props) {
                   label={item.title}
                   labelPlacement="bottom"
                   onChange={() => onDayChanged(index)}
+                  sx={{ mx: 0 }}
                 />
               ))}
             </Stack>
