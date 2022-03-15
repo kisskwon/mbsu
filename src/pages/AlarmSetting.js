@@ -67,37 +67,37 @@ function AlarmSetting(props) {
   const [dayList, setDayList] = useState([
     {
       index: 0,
-      title: "Mon",
+      title: "월",
       checked: true,
     },
     {
       index: 1,
-      title: "Tue",
+      title: "화",
       checked: true,
     },
     {
       index: 2,
-      title: "Wed",
+      title: "수",
       checked: true,
     },
     {
       index: 3,
-      title: "Thu",
+      title: "목",
       checked: true,
     },
     {
       index: 4,
-      title: "Fri",
+      title: "금",
       checked: true,
     },
     {
       index: 5,
-      title: "Sat",
+      title: "토",
       checked: false,
     },
     {
       index: 6,
-      title: "Sun",
+      title: "일",
       checked: false,
     },
   ]);

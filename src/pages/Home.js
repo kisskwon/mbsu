@@ -3,10 +3,42 @@ import { CardContent, Paper, Typography } from "@mui/material";
 import React from "react";
 import MBAppBar from "../libs/components/MBAppBar";
 import MBCard from "../libs/components/MBCard";
+import { format } from "date-fns";
 
 const StyledPaper = styled(Paper)(() => ({
   minHeight: "100vh",
 }));
+
+const getTime = () => {
+  let date = new Date();
+  let savedTime = localStorage.getItem("alarmTime");
+  if (savedTime === null) {
+    date.setHours(7);
+    date.setMinutes(0);
+    date.setSeconds(0);
+  } else {
+    date = new Date(JSON.parse(savedTime));
+  }
+  return format(date, "p");
+};
+
+const getDays = () => {
+  let dayofweeks = "fuck";
+  let savedDay = localStorage.getItem("alarmDay");
+  if (savedDay === null) {
+    dayofweeks = "월, 화, 수, 목, 금";
+  } else {
+    let arr = [];
+    const json = JSON.parse(savedDay);
+    Object.keys(json).forEach(function(index) {
+      if (json[index].checked === true) {
+        arr.push(json[index].title)
+      }
+    });
+    dayofweeks = arr.join(", ");
+  }
+  return dayofweeks;
+};
 
 function Home(props) {
   return (
@@ -15,7 +47,7 @@ function Home(props) {
       <StyledPaper square>
         <MBCard title="알림 설정" action="알림" to="/alarm">
           <CardContent sx={{ py: 1 }}>
-            <Typography sx={{ fontSize: 30 }}>6:50 pm</Typography>
+            <Typography sx={{ fontSize: 30 }}>{getTime()}</Typography>
             <Typography variant="subtitle2" color={"text.secondary"}>
               5분 후 자동 종료
             </Typography>
@@ -24,7 +56,7 @@ function Home(props) {
               color={"text.secondary"}
               sx={{ mt: 2 }}
             >
-              월, 화, 수, 목, 금
+            {getDays()}
             </Typography>
           </CardContent>
         </MBCard>
