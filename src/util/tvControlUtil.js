@@ -130,40 +130,10 @@ const launchWebApp = (
   );
 };
 
-const launchYoutube = () => {
-  showToast("launchYoutube");
-  ws.send(
-    JSON.stringify({
-      type: "request",
-      id: 1,
-      uri: "ssap://system.launcher/launch",
-      payload: {
-        id: "youtube.leanback.v4",
-        contentId:
-          "ioNng23DkIM&pairingCode=bcdc8ebd-ba95-48a8-b61b-16c55b2fb544&t=0.0",
-        params: {
-          contentId:
-            "ioNng23DkIM&pairingCode=bcdc8ebd-ba95-48a8-b61b-16c55b2fb544&t=0.0",
-        },
-      },
-    })
-  );
-};
-
-const closeWebAppOverlay = () => {
-  showToast("closeWebAppOverlay");
-  ws.send(
-    JSON.stringify({
-      type: "request",
-      id: 1,
-      uri: "ssap://webapp/closeWebApp",
-      payload: { webAppId: "test-web-app" },
-    })
-  );
-};
-
-const launchWebAppOverlay = () => {
+const launchWebAppOverlay = (opt) => {
   showToast("launchWebAppOverlay");
+  const url =
+    "https://kisskwon.github.io/thinq_talk/" + (opt ? `#/${opt}` : "");
   ws.send(
     JSON.stringify({
       type: "request",
@@ -171,7 +141,7 @@ const launchWebAppOverlay = () => {
       uri: "ssap://webapp/launchWebApp",
       payload: {
         webAppId: "test-web-app",
-        webAppUrl: "https://kisskwon.github.io/thinq_talk/",
+        webAppUrl: url,
         appInfo: {
           title: "tv poc",
           transparent: true,
@@ -188,6 +158,33 @@ const launchWebAppOverlay = () => {
           noLoadingSplash: true,
         },
       },
+    })
+  );
+};
+
+const launchYoutube = () => {
+  showToast("launchYoutube");
+  ws.send(
+    JSON.stringify({
+      type: "request",
+      id: 1,
+      uri: "ssap://system.launcher/launch",
+      payload: {
+        id: "youtube.leanback.v4",
+        contentId: "https://www.youtube.com/watch?v=ioNng23DkIM",
+      },
+    })
+  );
+};
+
+const closeWebAppOverlay = () => {
+  showToast("closeWebAppOverlay");
+  ws.send(
+    JSON.stringify({
+      type: "request",
+      id: 1,
+      uri: "ssap://webapp/closeWebApp",
+      payload: { webAppId: "test-web-app" },
     })
   );
 };
