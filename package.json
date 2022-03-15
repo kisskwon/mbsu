@@ -43,7 +43,6 @@
     "@mui/lab": "^5.0.0-alpha.72",
     "@mui/material": "^5.4.4",
     "@mui/styles": "^5.4.4",
-    "com.lge.mbsu.tvconnect": "file:Plugin_src/TVConnect",
     "cordova-android": "10.1.1",
     "date-fns": "^2.28.0",
     "react": "^17.0.2",
@@ -52,5 +51,8 @@
     "react-scripts": "5.0.0",
     "rimraf": "^3.0.2"
   },
-  "homepage": "./"
+  "homepage": "./",
+  "devDependencies": {
+    "com.lge.mbsu.tvconnect": "file:Plugin_src/TVConnect"
+  }
 }

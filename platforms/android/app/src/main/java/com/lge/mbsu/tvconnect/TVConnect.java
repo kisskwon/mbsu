@@ -131,7 +131,7 @@ public class TVConnect extends CordovaPlugin {
             SharedPreferences prefs = getApplicationContext().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt("hour", args.getInt(0));
-            editor.putInt("min", args.getString(1));
+            editor.putInt("min", args.getInt(1));
 
             JSONObject json = args.getJSONObject(2);
             editor.putString("dayofweek", json.toString());

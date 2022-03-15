@@ -12,6 +12,7 @@ import Radio from "@mui/material/Radio";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import krLocale from "date-fns/locale/ko";
+import { format } from "date-fns";
 import cloneDeep from "lodash/cloneDeep";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -124,6 +125,14 @@ function AlarmSetting(props) {
 
     window.cordova.plugins.TVConnect.toast("저장되었습니다.");
     navigate(-1);
+
+    const nativeTime = new Date(time);
+    const hour = format(nativeTime, "HH");
+    const min = format(nativeTime, "mm");
+    console.log("native time hour " + hour + " min " + min);
+    window.cordova.plugins.TVConnect.setTime(hour, min, dayList[0], holidayChecked, 0, (result) => {
+      console.log("setTime result : ", result);
+    })
   };
 
   return (

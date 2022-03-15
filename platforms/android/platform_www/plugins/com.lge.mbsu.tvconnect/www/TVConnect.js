@@ -1,3 +1,4 @@
+cordova.define("com.lge.mbsu.tvconnect.TVConnect", function(require, exports, module) {
 var exec = require("cordova/exec");
 
 exports.toast = function (arg0, success, error) {
@@ -16,3 +17,5 @@ exports.startThinqGallery = function (arg0, success, error) {
 exports.setTime = function (arg0, arg1, arg2, arg3, arg4, success, error) {
   exec(success, error, "TVConnect", "setTime", [arg0, arg1, arg2, arg3, arg4]);
 };
+
+});
