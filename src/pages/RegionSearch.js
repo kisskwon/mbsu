@@ -3,6 +3,8 @@ import Home from "@mui/icons-material/Home";
 import Search from "@mui/icons-material/Search";
 import { Box, Paper, Typography } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
+import List from "@mui/material/List";
+import ListSubheader from "@mui/material/ListSubheader";
 import TextField from "@mui/material/TextField";
 import React from "react";
 import MBAppBar from "../libs/components/MBAppBar";
@@ -47,23 +49,19 @@ function RegionSearch(props) {
           </Typography>
         </Box>
 
-        <Box>
-          <Typography
-            sx={{
-              paddingLeft: "20px",
-              paddingRight: "20px",
-              paddingTop: "10px",
-              paddingBottom: "10px",
-              backgroundColor: "#272727",
-            }}
-            variant="subtitle2"
-          >
-            최근 검색 위치
-          </Typography>
+        <List
+          component="nav"
+          aria-labelledby="nested-list-subheader"
+          subheader={
+            <ListSubheader component="div" id="nested-list-subheader">
+              최근 검색 위치
+            </ListSubheader>
+          }
+        >
           <Box sx={{ textAlign: "center", paddingTop: "150px" }}>
             <Typography variant="h6">최근 검색 위치가 없습니다.</Typography>
           </Box>
-        </Box>
+        </List>
       </StyledPaper>
     </>
   );
