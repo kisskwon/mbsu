@@ -33,7 +33,7 @@ function MBCard(props) {
       <Card elevation={10} sx={{ borderRadius: 3 }}>
         <CardActionArea
           component={Link}
-          to={props?.to ? props.to : "/"}
+          to={props?.to ? props.to : ""}
           sx={{ p: 2 }}
         >
           <CardActions sx={{ p: 0 }}>
@@ -54,9 +54,12 @@ function MBCard(props) {
             <Typography color={"text.primary"} sx={{ fontSize: 20 }}>
               {props.action}
             </Typography>
-            <StyledIcon aria-label={props.action} size="small">
-              <ArrowForwardIosIcon fontSize="small" />
-            </StyledIcon>
+
+            {props.to && (
+              <StyledIcon aria-label={props.action} size="small">
+                <ArrowForwardIosIcon fontSize="small" />
+              </StyledIcon>
+            )}
           </CardActions>
         </CardActionArea>
         {props.children}
