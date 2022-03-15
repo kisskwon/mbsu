@@ -2,10 +2,9 @@ import styled from "@emotion/styled";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import MobileTimePicker from "@mui/lab/MobileTimePicker";
-import { CardContent, Paper } from "@mui/material";
+import { CardContent, Paper, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
-import { cyan } from "@mui/material/colors";
 import Divider from "@mui/material/Divider";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
@@ -22,20 +21,6 @@ import MBSubCard from "../libs/components/MBSubCard";
 const StyledPaper = styled(Paper)(() => ({
   minHeight: "100vh",
 }));
-
-const DescText1st = styled.div`
-  font-size: 23px;
-  font-weight: bold;
-  color: #90caf9;
-  padding: 24px 24px 0px 24px;
-`;
-
-const DescText2nd = styled.div`
-  font-size: 23px;
-  font-weight: bold;
-  color: white;
-  padding: 0px 24px 0px 24px;
-`;
 
 function AlarmSetting(props) {
   const navigate = useNavigate();
@@ -192,9 +177,15 @@ function AlarmSetting(props) {
   return (
     <>
       <MBAppBar title={"알림 설정"} sub />
-      <StyledPaper square sx={{ pb: 8 }}>
-        <DescText1st>알림 시간을 설정해주세요.</DescText1st>
-        <DescText2nd>모닝브리핑이 자동으로 실행돼요.</DescText2nd>
+      <StyledPaper square>
+        <div style={{ padding: "20px", backgroundColor: "#272727" }}>
+          <Typography variant="h5" color="#90caf9" fontWeight="bold">
+            알림 시간을 설정해주세요.
+          </Typography>
+          <Typography variant="h5" fontWeight="bold">
+            모닝브리핑이 자동으로 실행돼요.
+          </Typography>
+        </div>
         <MBSubCard title="시간 설정">
           <CardContent sx={{ pt: 2 }}>
             <LocalizationProvider
