@@ -8,6 +8,7 @@ import Car from "./pages/Car";
 import Gallery from "./pages/Gallery";
 import Home from "./pages/Home";
 import Memo from "./pages/Memo";
+import MemoGuide from "./pages/MemoGuide";
 import NaviSetting from "./pages/NaviSetting";
 import RegionSearch from "./pages/RegionSearch";
 import Slogan from "./pages/Slogan";
@@ -65,6 +66,7 @@ const AppRoutes = () => {
     { path: "/talk", element: <Talk /> },
     { path: "/regionSearch", element: <RegionSearch /> },
     { path: "/gallery", element: <Gallery /> },
+    { path: "/memoGuide", element: <MemoGuide /> },
   ]);
   return routes;
 };
