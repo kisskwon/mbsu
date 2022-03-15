@@ -177,69 +177,6 @@ function AlarmSetting(props) {
             공휴일에는 알람끄기
           </CardContent>
         </MBSubCard>
-        <MBSubCard title="자동 종료 시간 설정">
-          <CardContent sx={{ pt: 2 }}>
-            종료 시간을 설정하시면 모닝브리핑이 자동으로 종료돼요.
-            <Stack
-              direction="row"
-              justifyContent="space-evenly"
-              alignItems="center"
-            >
-              <FormControlLabel
-                value="5m"
-                control={
-                  <Radio
-                    sx={{
-                      "&.Mui-checked": {
-                        color: cyan[600],
-                      },
-                    }}
-                  />
-                }
-                label="5분"
-              />
-              <FormControlLabel
-                value="10m"
-                control={
-                  <Radio
-                    sx={{
-                      "&.Mui-checked": {
-                        color: cyan[600],
-                      },
-                    }}
-                  />
-                }
-                label="10분"
-              />
-              <FormControlLabel
-                value="15m"
-                control={
-                  <Radio
-                    sx={{
-                      "&.Mui-checked": {
-                        color: cyan[600],
-                      },
-                    }}
-                  />
-                }
-                label="15분"
-              />
-              <FormControlLabel
-                value="20m"
-                control={
-                  <Radio
-                    sx={{
-                      "&.Mui-checked": {
-                        color: cyan[600],
-                      },
-                    }}
-                  />
-                }
-                label="20분"
-              />
-            </Stack>
-          </CardContent>
-        </MBSubCard>
       </StyledPaper>
       <Stack
         direction="row"
