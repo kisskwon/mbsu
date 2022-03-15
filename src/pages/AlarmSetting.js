@@ -123,14 +123,14 @@ function AlarmSetting(props) {
     localStorage.setItem("alarmDay", JSON.stringify(dayList));
     localStorage.setItem("alarmHoliday", holidayChecked);
 
-    window.cordova.plugins.TVConnect.toast("저장되었습니다.");
+    window.cordova?.plugins?.TVConnect.toast("저장되었습니다.");
     navigate(-1);
 
     const nativeTime = new Date(time);
     const hour = format(nativeTime, "HH");
     const min = format(nativeTime, "mm");
     console.log("native time hour " + hour + " min " + min);
-    window.cordova.plugins.TVConnect.setTime(hour, min, dayList[0], holidayChecked, 0, (result) => {
+    window.cordova?.plugins?.TVConnect.setTime(hour, min, dayList[0], holidayChecked, 0, (result) => {
       console.log("setTime result : ", result);
     })
   };
