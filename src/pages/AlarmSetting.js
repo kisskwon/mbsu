@@ -62,6 +62,11 @@ function AlarmSetting(props) {
     if (savedDay !== null) {
       setDayList(JSON.parse(savedDay));
     }
+
+    let savedEndTime = localStorage.getItem("alarmEndTime"); // 5, 10, 15, 20min
+    if (savedEndTime !== null) {
+      onEndTimeChanged(savedEndTime / 5 - 1);
+    }
   }, []);
 
   const [dayList, setDayList] = useState([
@@ -118,10 +123,52 @@ function AlarmSetting(props) {
     setHolidayChecked(event.target.checked);
   };
 
+  const [endTimeList, setEndTimeList] = useState([
+    {
+      index: 0,
+      title: "5분",
+      value: 5,
+      checked: true,
+    },
+    {
+      index: 1,
+      title: "10분",
+      value: 10,
+      checked: false,
+    },
+    {
+      index: 2,
+      title: "15분",
+      value: 15,
+      checked: false,
+    },
+    {
+      index: 3,
+      title: "20분",
+      value: 20,
+      checked: false,
+    },
+  ]);
+
+  const [afterEndTime, setAfterEndTime] = useState(5);
+  const onEndTimeChanged = async (index) => {
+    const beforeEndTimeList = cloneDeep(endTimeList);
+    let tempEndTimeList = endTimeList.map((item, i) => {
+      if (index === i) {
+        setAfterEndTime((i + 1) * 5);
+        return { ...item, checked: true };
+      } else {
+        return { ...item, checked: false };
+      }
+    });
+    setEndTimeList(tempEndTimeList);
+  };
+
   const handleSave = () => {
     localStorage.setItem("alarmTime", JSON.stringify(time));
     localStorage.setItem("alarmDay", JSON.stringify(dayList));
     localStorage.setItem("alarmHoliday", holidayChecked);
+    localStorage.setItem("alarmEndTime", afterEndTime);
 
     window.cordova?.plugins?.TVConnect.toast("저장되었습니다.");
     navigate(-1);
@@ -130,9 +177,16 @@ function AlarmSetting(props) {
     const hour = format(nativeTime, "HH");
     const min = format(nativeTime, "mm");
     console.log("native time hour " + hour + " min " + min);
-    window.cordova?.plugins?.TVConnect.setTime(hour, min, dayList[0], holidayChecked, 0, (result) => {
-      console.log("setTime result : ", result);
-    })
+    window.cordova?.plugins?.TVConnect.setTime(
+      hour,
+      min,
+      dayList[0],
+      holidayChecked,
+      afterEndTime,
+      (result) => {
+        console.log("setTime result : ", result);
+      }
+    );
   };
 
   return (
@@ -194,58 +248,15 @@ function AlarmSetting(props) {
               justifyContent="space-evenly"
               alignItems="center"
             >
-              <FormControlLabel
-                value="5m"
-                control={
-                  <Radio
-                    sx={{
-                      "&.Mui-checked": {
-                        color: cyan[600],
-                      },
-                    }}
-                  />
-                }
-                label="5분"
-              />
-              <FormControlLabel
-                value="10m"
-                control={
-                  <Radio
-                    sx={{
-                      "&.Mui-checked": {
-                        color: cyan[600],
-                      },
-                    }}
-                  />
-                }
-                label="10분"
-              />
-              <FormControlLabel
-                value="15m"
-                control={
-                  <Radio
-                    sx={{
-                      "&.Mui-checked": {
-                        color: cyan[600],
-                      },
-                    }}
-                  />
-                }
-                label="15분"
-              />
-              <FormControlLabel
-                value="20m"
-                control={
-                  <Radio
-                    sx={{
-                      "&.Mui-checked": {
-                        color: cyan[600],
-                      },
-                    }}
-                  />
-                }
-                label="20분"
-              />
+              {endTimeList.map((item, index) => (
+                <FormControlLabel
+                  key={index}
+                  value={item.value}
+                  control={<Radio checked={item.checked} />}
+                  label={item.title}
+                  onChange={() => onEndTimeChanged(index)}
+                />
+              ))}
             </Stack>
           </CardContent>
         </MBSubCard>
