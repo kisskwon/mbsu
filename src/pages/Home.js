@@ -48,9 +48,6 @@ function Home(props) {
         <MBCard title="알림 설정" action="알림" to="/alarm">
           <CardContent sx={{ py: 1 }}>
             <Typography sx={{ fontSize: 30 }}>{getTime()}</Typography>
-            <Typography variant="subtitle2" color={"text.secondary"}>
-              5분 후 자동 종료
-            </Typography>
             <Typography
               variant="subtitle2"
               color={"text.secondary"}
