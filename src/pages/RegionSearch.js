@@ -38,7 +38,7 @@ function RegionSearch(props) {
           <Typography variant="h6">
             <Home
               sx={{
-                color: "cyan",
+                color: "#90caf9",
                 marginRight: "5px",
                 verticalAlign: "text-bottom",
               }}

@@ -17,7 +17,7 @@ function Weather(props) {
       <MBAppBar title={"날씨"} sub />
       <StyledPaper square>
         <div style={{ padding: "20px", backgroundColor: "#272727" }}>
-          <Typography variant="h5" color="cyan" fontWeight="bold">
+          <Typography variant="h5" color="#90caf9" fontWeight="bold">
             날씨를 알고싶은 지역을
           </Typography>
           <Typography variant="h5" fontWeight="bold">
