@@ -17,6 +17,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         } else {
             Log.e("2MB", "fucking YSY");
             Toast.makeText(context, "alarm start...", Toast.LENGTH_LONG).show();
+            AlarmSetting.getInstance(context).turnOnTv();
         }
     }
 }

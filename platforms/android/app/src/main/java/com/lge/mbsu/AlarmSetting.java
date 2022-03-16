@@ -7,15 +7,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.lge.mbsu.tvconnect.ICDVInterface;
+import com.lge.mbsu.tvconnect.TVConnect;
+
 import java.util.Calendar;
 
-public class AlarmSetting {
+public class AlarmSetting implements ICDVInterface {
     public static final String PREFERENCES_NAME = "preference";
     private static AlarmSetting instance;
     private AlarmManager mAlarmManager;
     private Intent mAlarmIntent;
     private PendingIntent mPendingIntent;
     private Context mContext;
+    private TVConnect mCordovaPlugin = null;
     private AlarmSetting(Context context) {
         mContext = context;
         mAlarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
@@ -28,6 +32,11 @@ public class AlarmSetting {
             instance = new AlarmSetting(context);
         }
         return instance;
+    }
+
+    @Override
+    public void registerCDVInstance(TVConnect tvconnect) {
+        mCordovaPlugin = tvconnect;
     }
 
     private SharedPreferences getPreferences(Context context) {
@@ -82,5 +91,12 @@ public class AlarmSetting {
 
         AlarmManager.AlarmClockInfo info = new AlarmManager.AlarmClockInfo(triggerTime, null);
         mAlarmManager.setAlarmClock(info, mPendingIntent);
+    }
+
+    public void turnOnTv() {
+        if (mCordovaPlugin != null) {
+            Log.e("2MB", "AlarmSetting turnOnTv");
+            mCordovaPlugin.pluginTurnOnTV();
+        }
     }
 }

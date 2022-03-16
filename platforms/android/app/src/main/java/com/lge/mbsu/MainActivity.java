@@ -42,4 +42,13 @@ public class MainActivity extends CordovaActivity {
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
     }
+
+    @Override
+    protected void init() {
+        super.init();
+        if (appView != null && appView.isInitialized()) {
+            Log.e("2MB", "cordova interface init");
+            appView.getPluginManager().postMessage("setCDVInterface", AlarmSetting.getInstance(this));
+        }
+    }
 }

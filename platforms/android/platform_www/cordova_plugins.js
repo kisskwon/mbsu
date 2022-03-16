@@ -10,6 +10,6 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     }
   ];
   module.exports.metadata = {
-    "com.lge.mbsu.tvconnect": "0.0.1"
+    "com.lge.mbsu.tvconnect": "0.0.2"
   };
 });
