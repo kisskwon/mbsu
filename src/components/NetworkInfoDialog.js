@@ -56,6 +56,7 @@ const NetworkInfoDialog = ({ isOpen, onComplete }) => {
     localStorage.setItem("ipAddr", ipAddr);
     //setTVNetworkInfo({ ...tvNetworkInfo, macAddr: macAddr, ipAddr: ipAddr });
     handleDialogClose();
+    window.cordova.plugins.TVConnect.toast("IP, MAC 을 저장했어요.");
   };
 
   return (
