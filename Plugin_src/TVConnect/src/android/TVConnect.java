@@ -6,6 +6,8 @@ import java.net.InetAddress;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CordovaInterface;
+import org.apache.cordova.CordovaWebView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,7 +16,9 @@ import android.content.Context;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.ValueCallback;
 import android.widget.Toast;
 
 /**
@@ -22,6 +26,7 @@ import android.widget.Toast;
  */
 public class TVConnect extends CordovaPlugin {
     public static final String PREFERENCES_NAME = "preference";
+    private ICDVInterface sInterface;
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         Log.e("2MB", "TVConnect = execute" + args);
@@ -30,7 +35,7 @@ public class TVConnect extends CordovaPlugin {
             this.showToast(message, callbackContext);
             return true;
         } else if (action.equals("turnOn")) {
-            startCallUp(args, callbackContext);
+            startTurnOnTV(args, callbackContext);
             return true;
         } else if (action.equals("startThinqGallery")) {
             startThinqGallery(args, callbackContext);
@@ -42,6 +47,30 @@ public class TVConnect extends CordovaPlugin {
         return false;
     }
 
+    @Override
+    public Object onMessage(String id, Object data) {
+        Log.e("2MB", "onMessage id : " + id);
+        if (id.equals("setCDVInterface")) {
+            Log.e("2MB", "setCDVInterface");
+            sInterface = (ICDVInterface) data;
+            sInterface.registerCDVInstance(this);
+            return Boolean.TRUE;
+        }
+
+        return super.onMessage(id, data);
+    }
+
+
+    @Override
+    public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+        Log.e("2MB", "initialize CordovaPlugin");
+        super.initialize(cordova, webView);
+        if (sInterface != null) {
+            Log.e("2MB", "initialize setCDVInterface");
+            sInterface.registerCDVInstance(this);
+        }
+    }
+
     private void showToast(String message, CallbackContext callbackContext) {
         if (message != null && message.length() > 0) {
             Toast.makeText(cordova.getContext(), message, Toast.LENGTH_SHORT).show();
@@ -49,6 +78,9 @@ public class TVConnect extends CordovaPlugin {
         } else {
             callbackContext.error("Expected one non-empty string argument.");
         }
+
+        syncUpLocalStorageItem("ipAddr");
+        syncUpLocalStorageItem("macAddr");
     }
 
     public static final int PORT = 9;
@@ -69,8 +101,61 @@ public class TVConnect extends CordovaPlugin {
         return bytes;
     }
 
-    private void startCallUp(final JSONArray args, final CallbackContext callbackContext) {
-        Log.e("2MB", "2MB startCallUp args " + args);
+    private void startTurnOnTV() {
+        Log.e("2MB", "2MB startTurnOnTV from native ");
+
+        try {
+            String macStr = getPrefString("macAddr");
+            String ipStr = getPrefString("ipAddr");
+
+            Log.e("2MB", "2MB startTurnOnTV from native macStr : " + macStr + " ip : " + ipStr);
+
+            if (TextUtils.isEmpty(macStr) || TextUtils.isEmpty(ipStr)) {
+                Toast.makeText(getApplicationContext(), "startTurnOnTV but ip,mac is empty...", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            String [] ips = ipStr.split("\\.");
+            ips[ips.length - 1] = "255";
+            ipStr = String.join(".", ips);
+            Log.e("2MB", "2MB startTurnOnTV from native new ip : " + ipStr);
+
+            byte[] macBytes = getMacBytes(macStr);
+            byte[] bytes = new byte[6 + 16 * macBytes.length];
+
+            for (int i = 0; i < 6; i++) {
+                bytes[i] = (byte) 0xff;
+            }
+            for (int i = 6; i < bytes.length; i += macBytes.length) {
+                System.arraycopy(macBytes, 0, bytes, i, macBytes.length);
+            }
+
+            final String newip = ipStr;
+
+            new Thread() {
+                public void run() {
+                   try {
+                    InetAddress address = InetAddress.getByName(newip);
+                    DatagramPacket packet = new DatagramPacket(bytes, bytes.length, address, PORT);
+                    DatagramSocket socket = new DatagramSocket();
+                    socket.send(packet);
+                    socket.close();
+                   } catch (Exception e) {
+                    Log.i("2MB", "2MB Exception thrown1. " + e);
+                   }
+                }
+             }.start();
+
+
+            Log.i("2MB", "2MB Wake-on-LAN packet sent.");
+        } catch(Exception e){
+            Log.i("2MB", "2MB Exception thrown2. " + e);
+        }
+        return;
+    }
+
+    private void startTurnOnTV(final JSONArray args, final CallbackContext callbackContext) {
+        Log.e("2MB", "2MB startTurnOnTV args " + args);
 
             try {
                 String macStr = args.getString(0);
@@ -95,10 +180,9 @@ public class TVConnect extends CordovaPlugin {
                 Log.i("2MB", "2MB Wake-on-LAN packet sent.");
                 callbackContext.success("2MB Wake-on-LAN packet sent.");
             } catch(Exception e){
-                Log.i("2MB", "2MB Exception thrown.");
+                Log.i("2MB", "2MB Exception thrown." + e);
                 callbackContext.error("2MB fuck you.");
             }
-
         return;
     }
 
@@ -131,7 +215,7 @@ public class TVConnect extends CordovaPlugin {
             SharedPreferences prefs = getApplicationContext().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt("hour", args.getInt(0));
-            editor.putInt("min", args.getString(1));
+            editor.putInt("min", args.getInt(1));
 
             JSONObject json = args.getJSONObject(2);
             editor.putString("dayofweek", json.toString());
@@ -155,5 +239,47 @@ public class TVConnect extends CordovaPlugin {
 
     private Context getApplicationContext() {
         return this.cordova.getActivity().getApplicationContext();
+    }
+
+    private SharedPreferences getPreferences(Context context) {
+        return context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+    }
+
+    private String getPrefString(String key) {
+        SharedPreferences prefs = getPreferences(getApplicationContext());
+        String value = prefs.getString(key, "");
+        return value;
+    }
+
+    private void syncUpLocalStorageItem(String key) {
+        String script = "(function() { \n" +
+                    "var value = localStorage.getItem('" + key +"');\n" +
+                    ("console.log('[native] localStorage(" + key + ") = ' + value);\n") +
+                    "return value;\n" +
+                "})();";
+        cordova.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                if (webView != null && webView.getEngine() != null) {
+                    webView.getEngine().evaluateJavascript(script, new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String value) {
+                            Log.e("2MB", "onReceiveValue : " + value);
+                            SharedPreferences prefs = getApplicationContext().getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = prefs.edit();
+
+                            value = value.replace("\"", "");
+                            editor.putString(key, value);
+                            editor.commit();
+                        }
+                    });
+                }
+            }
+        });
+
+    }
+
+    public void pluginTurnOnTV() {
+        Log.e("2MB", "TVConnect pluginTurnOnTV");
+        startTurnOnTV();
     }
 }
