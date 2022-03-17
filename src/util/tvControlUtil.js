@@ -203,6 +203,9 @@ const turnOffTV = () => {
   );
 };
 
+window.tvconnect = connect;
+window.launchWebApp = launchWebApp;
+
 export const tvControlUtil = {
   connect,
   launchWebApp,

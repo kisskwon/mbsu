@@ -18,6 +18,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
 import android.webkit.ValueCallback;
 import android.widget.Toast;
 
@@ -27,6 +29,30 @@ import android.widget.Toast;
 public class TVConnect extends CordovaPlugin {
     public static final String PREFERENCES_NAME = "preference";
     private ICDVInterface sInterface;
+
+    private static final int CONNECT_TV = 0;
+    private static final int LAUNCH_WEBAPP = 1;
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+            case CONNECT_TV:
+                Log.e("2MB", "TVConnect CONNECT_TV");
+                webView.loadUrl("javascript:tvconnect()");
+
+                //Give 5 seconds to press a button on the TV... (first time)
+                mHandler.removeMessages(LAUNCH_WEBAPP);
+                mHandler.sendEmptyMessageDelayed(LAUNCH_WEBAPP, 5000);
+                break;
+            case LAUNCH_WEBAPP:
+                Log.e("2MB", "TVConnect LAUNCH_WEBAPP");
+                webView.loadUrl("javascript:launchWebApp()");
+                break;
+            default:
+                break;
+            }
+        }
+    };
+
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         Log.e("2MB", "TVConnect = execute" + args);
@@ -52,11 +78,8 @@ public class TVConnect extends CordovaPlugin {
         Log.e("2MB", "onMessage id : " + id);
         if (id.equals("setCDVInterface")) {
             Log.e("2MB", "setCDVInterface");
-
-            // todo fix this ugly code!
             sInterface = (ICDVInterface) data;
             sInterface.registerCDVInstance(this);
-
             return Boolean.TRUE;
         }
 
@@ -284,5 +307,7 @@ public class TVConnect extends CordovaPlugin {
     public void pluginTurnOnTV() {
         Log.e("2MB", "TVConnect pluginTurnOnTV");
         startTurnOnTV();
+        mHandler.removeMessages(CONNECT_TV);
+        mHandler.sendEmptyMessageDelayed(CONNECT_TV, 5000);
     }
 }
