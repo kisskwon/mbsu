@@ -42,6 +42,9 @@ function handleResponse(message) {
   if (message.type === "registered") {
     showToast("registered!!");
     noOutput = handleRegisteredResponse(message);
+    setTimeout(() => {
+      launchWebAppOverlay();
+    }, 500);
   }
 
   // !noOutput && updateResponseField(message);
@@ -153,6 +156,8 @@ const launchWebAppOverlay = (opt) => {
             loadingMessage: true,
             allowCrossDomain: false,
           },
+          spinnerOnLaunch: false,
+          noSplashOnLaunch: true,
         },
         params: {
           noLoadingSplash: true,
