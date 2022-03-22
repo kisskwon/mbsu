@@ -29,18 +29,16 @@ function Talk(props) {
       <StyledPaper square>
         <List>
           <ListItem button onClick={() => tvControlUtil.connect()}>
-            <ListItemText primary={"Connect to TV"} />
-          </ListItem>
-          <ListItem button onClick={() => tvControlUtil.launchWebAppOverlay()}>
             <ListItemText primary={"Connect Talk Service"} />
           </ListItem>
           <ListItem
             button
             onClick={() => {
+              tvControlUtil.launchWebAppOverlay("image");
+
               setDoc(doc(db, "messages", "type"), {
                 type: "single",
               });
-              tvControlUtil.launchWebAppOverlay("image");
             }}
           >
             <ListItemText primary={"Text + 태권도 Image"} />
@@ -48,13 +46,14 @@ function Talk(props) {
           <ListItem
             button
             onClick={() => {
+              tvControlUtil.launchWebAppOverlay("youtube");
+
               const batch = writeBatch(db);
               const typeRef = doc(db, "messages", "type");
               batch.set(typeRef, { type: "youtube" });
               const youtubeRef = doc(db, "video", "youtube");
               batch.set(youtubeRef, { on: false });
               batch.commit();
-              tvControlUtil.launchWebAppOverlay("youtube");
             }}
           >
             <ListItemText primary={"Text + Youtube"} />
