@@ -66,10 +66,15 @@ public class AlarmSetting implements ICDVInterface {
             return;
         }
 
+        if (getHour() == -1 || getMin() == -1) {
+            Log.e("2MB", "return..... hour : " + getHour() + " min :" + getMin());
+            return;
+        }
+
         Calendar calendar = Calendar.getInstance();
 
-        int hourTime = getHour() == -1 ? calendar.get(Calendar.HOUR_OF_DAY) : getHour();
-        int minuteTime = getMin() == -1 ? calendar.get(Calendar.MINUTE) + 1 : getMin();
+        int hourTime = getHour();
+        int minuteTime = getMin();
 
         calendar.set(Calendar.HOUR_OF_DAY, hourTime);
         calendar.set(Calendar.MINUTE, minuteTime);
