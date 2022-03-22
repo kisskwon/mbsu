@@ -1,4 +1,4 @@
-package com.lge.mbsu;
+package com.lge.mbsu.tvconnect.alarm;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

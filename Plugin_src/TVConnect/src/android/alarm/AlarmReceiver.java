@@ -1,4 +1,4 @@
-package com.lge.mbsu;
+package com.lge.mbsu.tvconnect.alarm;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
