@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="com.lge.mbsu.tvconnect"
+  version="0.0.2"
+  xmlns="http://apache.org/cordova/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  <name>TVConnect</name>
+  <js-module name="TVConnect" src="www/TVConnect.js">
+    <clobbers target="cordova.plugins.TVConnect" />
+  </js-module>
+  <platform name="android">
+    <config-file parent="/*" target="res/xml/config.xml">
+      <feature name="TVConnect">
+        <param name="android-package" value="com.lge.mbsu.tvconnect.TVConnect" />
+        <param name="onload" value="true" />
+      </feature>
+    </config-file>
+    <config-file target="AndroidManifest.xml" parent="/manifest/application">
+      <receiver android:name="com.lge.mbsu.tvconnect.alarm.AlarmReceiver"
+        android:enabled="true" android:exported="true" >
+        <intent-filter>
+          <action android:name="android.intent.action.BOOT_COMPLETED" />
+          <action android:name="com.lge.mbsu.SET_ALRAM" />
+        </intent-filter>
+      </receiver>
+    </config-file>
+    <source-file src="src/android/TVConnect.java" target-dir="src/com/lge/mbsu/tvconnect" />
+    <source-file src="src/android/ICDVInterface.java" target-dir="src/com/lge/mbsu/tvconnect" />
+    <source-file src="src/android/alarm/AlarmReceiver.java" target-dir="src/com/lge/mbsu/tvconnect/alarm" />
+    <source-file src="src/android/alarm/AlarmSetting.java" target-dir="src/com/lge/mbsu/tvconnect/alarm" />
+  </platform>
+</plugin>
