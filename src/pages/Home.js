@@ -53,7 +53,7 @@ function Home(props) {
               color={"text.secondary"}
               sx={{ mt: 2 }}
             >
-            {getDays()}
+              {getDays()}
             </Typography>
           </CardContent>
         </MBCard>
@@ -61,6 +61,13 @@ function Home(props) {
           <CardContent>
             <Typography variant="subtitle2" color={"text.secondary"}>
               띵큐토크
+            </Typography>
+          </CardContent>
+        </MBCard>
+        <MBCard action="알림이" to="/reminder">
+          <CardContent>
+            <Typography variant="subtitle2" color={"text.secondary"}>
+              띵큐 알림이
             </Typography>
           </CardContent>
         </MBCard>
