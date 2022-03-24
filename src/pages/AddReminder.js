@@ -16,6 +16,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import { tvControlUtil } from "../util/tvControlUtil";
 
 const StyledPaper = styled(Paper)(() => ({
   minHeight: "100vh",
@@ -24,7 +25,15 @@ const StyledPaper = styled(Paper)(() => ({
 function AddReminder(props) {
   const navigate = useNavigate();
 
-  const handleSave = () => {};
+  const [url, setUrl] = useState("");
+  const handleChange = (e) => {
+    setUrl(e.target.value);
+  };
+
+  const handleSave = () => {
+    console.log("handleSave-url : " + url);
+    tvControlUtil.launchBrowser(url);
+  };
 
   const [value, setValue] = useState(new Date());
 
@@ -51,6 +60,22 @@ function AddReminder(props) {
               width: "90%",
               margin: "auto",
               marginBottom: "15px",
+              marginTop: "15px",
+            }}
+          >
+            <Button onClick={() => tvControlUtil.connect()}>
+              Connect Service
+            </Button>
+          </div>
+        </MBSubCard>
+        <MBSubCard>
+          <div
+            style={{
+              display: "grid",
+              width: "90%",
+              margin: "auto",
+              marginBottom: "15px",
+              marginTop: "15px",
             }}
           >
             <TextField
@@ -64,6 +89,7 @@ function AddReminder(props) {
               label="URL 입력"
               multiline
               margin="normal"
+              onChange={handleChange}
             />
             <FormControl margin="normal">
               <FormLabel>알림 시간 설정</FormLabel>
