@@ -22,9 +22,17 @@
           <action android:name="com.lge.mbsu.SET_ALRAM" />
         </intent-filter>
       </receiver>
+      <activity android:name="com.lge.mbsu.tvconnect.SharingActivity" >
+        <intent-filter>
+          <action android:name="android.intent.action.SEND" />
+          <category android:name="android.intent.category.DEFAULT" />
+          <data android:mimeType="text/plain" />
+        </intent-filter>
+      </activity>
     </config-file>
     <source-file src="src/android/TVConnect.java" target-dir="src/com/lge/mbsu/tvconnect" />
     <source-file src="src/android/ICDVInterface.java" target-dir="src/com/lge/mbsu/tvconnect" />
+    <source-file src="src/android/SharingActivity.java" target-dir="src/com/lge/mbsu/tvconnect" />
     <source-file src="src/android/alarm/AlarmReceiver.java" target-dir="src/com/lge/mbsu/tvconnect/alarm" />
     <source-file src="src/android/alarm/AlarmSetting.java" target-dir="src/com/lge/mbsu/tvconnect/alarm" />
   </platform>
