@@ -91,7 +91,7 @@ function AddReminder(props) {
               margin="normal"
               onChange={handleChange}
             />
-            <FormControl margin="normal">
+            {/* <FormControl margin="normal">
               <FormLabel>알림 시간 설정</FormLabel>
               <RadioGroup
                 row
@@ -124,7 +124,7 @@ function AddReminder(props) {
                   }}
                 />
               </LocalizationProvider>
-            )}
+            )} */}
           </div>
         </MBSubCard>
       </StyledPaper>
@@ -152,7 +152,7 @@ function AddReminder(props) {
           취소
         </Button>
         <Button variant="text" sx={{ fontWeight: "bold" }} onClick={handleSave}>
-          저장
+          실행
         </Button>
       </Stack>
     </>
