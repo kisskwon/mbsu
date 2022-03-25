@@ -12,8 +12,8 @@ const NetworkInfoDialog = ({ isOpen, onComplete }) => {
     useRecoilState(tvNetworkInformation); */
   //console.log("isOpen " + isOpen);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
-  const [macAddr, setMacAddr] = useState();
-  const [ipAddr, setIpAddr] = useState("");
+  const [macAddr, setMacAddr] = useState(localStorage.getItem("macAddr") || "FF:FF:FF:FF:FF:FF");
+  const [ipAddr, setIpAddr] = useState(localStorage.getItem("ipAddr") || "");
 
   useEffect(() => {
     setIsOpenDialog(isOpen);
@@ -56,7 +56,7 @@ const NetworkInfoDialog = ({ isOpen, onComplete }) => {
     localStorage.setItem("ipAddr", ipAddr);
     //setTVNetworkInfo({ ...tvNetworkInfo, macAddr: macAddr, ipAddr: ipAddr });
     handleDialogClose();
-    window.cordova.plugins.TVConnect.toast("IP, MAC À» ÀúÀåÇß¾î¿ä.");
+    window.cordova?.plugins?.TVConnect.toast("IP, MAC ë¥¼ ë³€ê²½í–ˆì–´ìš”.");
   };
 
   return (
