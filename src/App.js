@@ -15,6 +15,8 @@ import RegionSearch from "./pages/RegionSearch";
 import Slogan from "./pages/Slogan";
 import Talk from "./pages/Talk";
 import Weather from "./pages/Weather";
+import Reminder from "./pages/Reminder";
+import AddReminder from "./pages/AddReminder";
 
 const darkTheme = createTheme({
   palette: {
@@ -69,6 +71,8 @@ const AppRoutes = () => {
     { path: "/gallery", element: <Gallery /> },
     { path: "/memoGuide", element: <MemoGuide /> },
     { path: "/editGreeting", element: <EditGreeting /> },
+    { path: "/reminder", element: <Reminder /> },
+    { path: "/addReminder", element: <AddReminder /> },
   ]);
   return routes;
 };
