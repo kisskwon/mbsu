@@ -1,21 +1,14 @@
 import styled from "@emotion/styled";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { CardContent, Paper, Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import MBAppBar from "../libs/components/MBAppBar";
 import MBSubCard from "../libs/components/MBSubCard";
-import DateTimePicker from "@mui/lab/DateTimePicker";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import NetflixInformation from "../libs/components/NetflixInformation";
+import { REMINDER_MODE } from "../libs/constant/Constant";
 import { tvControlUtil } from "../util/tvControlUtil";
 
 const StyledPaper = styled(Paper)(() => ({
@@ -24,7 +17,12 @@ const StyledPaper = styled(Paper)(() => ({
 
 function AddReminder(props) {
   const navigate = useNavigate();
+  const state = useLocation().state;
+  const mode = state?.mode || REMINDER_MODE.NORMAL;
+  const defaultUrl = "https://www.netflix.com/kr/title/81517168?s=a&trkid=13747225&t=cp&vlang=ko&clip=81564946"; //25 21
 
+  console.log("mode : " + state?.mode);
+  console.log(location);
   const [url, setUrl] = useState("");
   const handleChange = (e) => {
     setUrl(e.target.value);
@@ -63,69 +61,36 @@ function AddReminder(props) {
               marginTop: "15px",
             }}
           >
-            <Button onClick={() => tvControlUtil.connect()}>
-              Connect Service
-            </Button>
+            <Button onClick={() => tvControlUtil.connect()}>Connect Service</Button>
           </div>
         </MBSubCard>
         <MBSubCard>
-          <div
-            style={{
-              display: "grid",
-              width: "90%",
-              margin: "auto",
-              marginBottom: "15px",
-              marginTop: "15px",
-            }}
-          >
-            <TextField
-              id="reminder-title"
-              label="내용 입력"
-              variant="outlined"
-              margin="normal"
-            />
-            <TextField
-              id="reminder-url"
-              label="URL 입력"
-              multiline
-              margin="normal"
-              onChange={handleChange}
-            />
-            {/* <FormControl margin="normal">
-              <FormLabel>알림 시간 설정</FormLabel>
-              <RadioGroup
-                row
-                name="row-radio-buttons-group"
-                onChange={handleTimeSetChange}
-              >
-                <FormControlLabel
-                  value="atHome"
-                  control={<Radio />}
-                  label="집에 도착하면 바로 실행"
-                />
-                <FormControlLabel
-                  value="onTime"
-                  control={<Radio />}
-                  label="시간 선택"
-                />
-              </RadioGroup>
-            </FormControl>
-
-            {timeType === "onTime" && (
-              <LocalizationProvider
-                dateAdapter={AdapterDateFns}
-                id="date-time-picker"
-              >
-                <DateTimePicker
-                  renderInput={(props) => <TextField {...props} />}
-                  value={value}
-                  onChange={(newValue) => {
-                    setValue(newValue);
-                  }}
-                />
-              </LocalizationProvider>
-            )} */}
-          </div>
+          {mode === REMINDER_MODE.NETFLIX ? (
+            <div
+              style={{
+                display: "grid",
+                width: "90%",
+                margin: "auto",
+                marginBottom: "15px",
+                marginTop: "15px"
+              }}
+            >
+              <NetflixInformation url={state?.url || defaultUrl} />
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "grid",
+                width: "90%",
+                margin: "auto",
+                marginBottom: "15px",
+                marginTop: "15px"
+              }}
+            >
+              <TextField id="reminder-title" label="웹내용 입력" variant="outlined" margin="normal" />
+              <TextField id="reminder-url" label="URL 입력" multiline margin="normal" onChange={handleChange} />
+            </div>
+          )}
         </MBSubCard>
       </StyledPaper>
       <Stack

@@ -16,6 +16,7 @@ if (window.cordova) {
   document.addEventListener(
     "deviceready",
     () => {
+      console.log("2MB cordova deviceready");
       renderReactDom();
     },
     false

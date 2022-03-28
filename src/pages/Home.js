@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { CardContent, Paper, Typography } from "@mui/material";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import MBAppBar from "../libs/components/MBAppBar";
 import MBCard from "../libs/components/MBCard";
 import { format } from "date-fns";
@@ -32,7 +33,7 @@ const getDays = () => {
     const json = JSON.parse(savedDay);
     Object.keys(json).forEach(function(index) {
       if (json[index].checked === true) {
-        arr.push(json[index].title)
+        arr.push(json[index].title);
       }
     });
     dayofweeks = arr.join(", ");
@@ -41,6 +42,14 @@ const getDays = () => {
 };
 
 function Home(props) {
+  const navigate = useNavigate();
+  const gotoAddReminder = (mode, nativeUrl) => {
+    console.log("2MB goto addReminder mode : " + mode + " nativeUrl :" + nativeUrl);
+    navigate("/addReminder", { state: { mode: mode, url: nativeUrl } });
+  };
+
+  window.gotoAddReminder = gotoAddReminder;
+
   return (
     <>
       <MBAppBar title={"모닝브리핑 블랙"} />
