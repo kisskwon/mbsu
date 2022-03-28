@@ -325,6 +325,6 @@ public class TVConnect extends CordovaPlugin {
     public void gotoAddReminder(int mode, String url) {
         Log.e("2MB", "TVConnect gotoAddReminder");
         mHandler.removeMessages(GOTO);
-        mHandler.sendMessageDelayed(mHandler.obtainMessage(GOTO, mode, 0, url), 300);
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(GOTO, mode, 0, url), 500);
     }
 }
