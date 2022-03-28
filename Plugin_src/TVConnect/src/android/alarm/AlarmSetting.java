@@ -105,10 +105,10 @@ public class AlarmSetting implements ICDVInterface {
         }
     }
 
-    public void gotoAddReminder(String url) {
+    public void gotoAddReminder(int mode, String url) {
         if (mCordovaPlugin != null) {
             Log.e("2MB", "AlarmSetting gotoAddReminder");
-            mCordovaPlugin.gotoAddReminder(url);
+            mCordovaPlugin.gotoAddReminder(mode, url);
         }
     }
 }

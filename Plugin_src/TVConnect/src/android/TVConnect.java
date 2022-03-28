@@ -30,6 +30,9 @@ public class TVConnect extends CordovaPlugin {
     public static final String PREFERENCES_NAME = "preference";
     private ICDVInterface sInterface;
 
+    private static final int MODE_WEB = 0;
+    private static final int MODE_NETFLIX = 1;
+
     private static final int CONNECT_TV = 0;
     private static final int LAUNCH_WEBAPP = 1;
     private static final int GOTO = 2;
@@ -49,10 +52,11 @@ public class TVConnect extends CordovaPlugin {
                 webView.loadUrl("javascript:launchWebApp()");
                 break;
             case GOTO:
-                Log.e("2MB", "TVConnect goto reminder");
+                int mode = msg.arg1;
                 String url = (String)msg.obj;
                 url = url.replaceAll("\"", "");
-                webView.loadUrl("javascript:gotoAddReminder(\"" + url + "\")");
+                Log.e("2MB", "TVConnect goto reminder mode : " + mode + " url :" + url);
+                webView.loadUrl("javascript:gotoAddReminder(" + mode  + ", \"" + url + "\")");
                 break;
             default:
                 break;
@@ -318,9 +322,9 @@ public class TVConnect extends CordovaPlugin {
         mHandler.sendEmptyMessageDelayed(CONNECT_TV, 5000);
     }
 
-    public void gotoAddReminder(String url) {
+    public void gotoAddReminder(int mode, String url) {
         Log.e("2MB", "TVConnect gotoAddReminder");
         mHandler.removeMessages(GOTO);
-        mHandler.sendMessageDelayed(mHandler.obtainMessage(GOTO, url), 300);
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(GOTO, mode, 0, url), 300);
     }
 }

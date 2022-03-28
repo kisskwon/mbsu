@@ -24,12 +24,25 @@ public class SharingActivity extends CordovaActivity {
     }
 
     // Set by <content src="index.html" /> in config.xml
-    Log.e("2MB", "SharingActivity launchUrl :" + launchUrl);
+    Log.e("2MB", "SharingActivity onCreate launchUrl :" + launchUrl);
     loadUrl(launchUrl);
 
     if (Intent.ACTION_SEND.equals(action) && "text/plain".equals(type)) {
       handleSendText(intent); // Handle text being sent
     }
+  }
+
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+
+    Log.e("2MB", "SharingActivity onNewIntent");
+    String action = intent.getAction();
+    String type = intent.getType();
+    if (Intent.ACTION_SEND.equals(action) && "text/plain".equals(type)) {
+      handleSendText(intent); // Handle text being sent
+    }
+
   }
 
   void handleSendText(Intent intent) {
@@ -39,7 +52,13 @@ public class SharingActivity extends CordovaActivity {
       appView.getPluginManager().postMessage("setCDVInterface", AlarmSetting.getInstance(this));
       Log.e("2MB", "go add reminder");
       Toast.makeText(this, sharedText, Toast.LENGTH_SHORT).show();
-      AlarmSetting.getInstance(this).gotoAddReminder(sharedText);
+
+      int mode = 0; //mode normal
+      if (sharedText.contains("netflix")) {
+        mode = 1; //mode netflix
+      }
+
+      AlarmSetting.getInstance(this).gotoAddReminder(mode, sharedText);
     }
   }
 
