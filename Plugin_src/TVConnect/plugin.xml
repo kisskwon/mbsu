@@ -22,7 +22,7 @@
           <action android:name="com.lge.mbsu.SET_ALRAM" />
         </intent-filter>
       </receiver>
-      <activity android:name="com.lge.mbsu.tvconnect.SharingActivity" >
+      <activity android:name="com.lge.mbsu.tvconnect.SharingActivity" android:theme="@style/Theme.AppCompat.NoActionBar">
         <intent-filter>
           <action android:name="android.intent.action.SEND" />
           <category android:name="android.intent.category.DEFAULT" />

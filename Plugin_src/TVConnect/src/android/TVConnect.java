@@ -32,6 +32,7 @@ public class TVConnect extends CordovaPlugin {
 
     private static final int CONNECT_TV = 0;
     private static final int LAUNCH_WEBAPP = 1;
+    private static final int GOTO = 2;
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -46,6 +47,12 @@ public class TVConnect extends CordovaPlugin {
             case LAUNCH_WEBAPP:
                 Log.e("2MB", "TVConnect LAUNCH_WEBAPP");
                 webView.loadUrl("javascript:launchWebApp()");
+                break;
+            case GOTO:
+                Log.e("2MB", "TVConnect goto reminder");
+                String url = (String)msg.obj;
+                url = url.replaceAll("\"", "");
+                webView.loadUrl("javascript:gotoAddReminder(\"" + url + "\")");
                 break;
             default:
                 break;
@@ -309,5 +316,11 @@ public class TVConnect extends CordovaPlugin {
         startTurnOnTV();
         mHandler.removeMessages(CONNECT_TV);
         mHandler.sendEmptyMessageDelayed(CONNECT_TV, 5000);
+    }
+
+    public void gotoAddReminder(String url) {
+        Log.e("2MB", "TVConnect gotoAddReminder");
+        mHandler.removeMessages(GOTO);
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(GOTO, url), 300);
     }
 }
