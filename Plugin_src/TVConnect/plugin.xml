@@ -14,6 +14,9 @@
         <param name="onload" value="true" />
       </feature>
     </config-file>
+    <edit-config file="AndroidManifest.xml" target="/manifest/application" mode="merge">
+      <application android:usesCleartextTraffic="true" />
+    </edit-config>
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
       <receiver android:name="com.lge.mbsu.tvconnect.alarm.AlarmReceiver"
         android:enabled="true" android:exported="true" >
