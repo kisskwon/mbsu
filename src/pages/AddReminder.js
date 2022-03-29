@@ -3,8 +3,12 @@ import { Paper, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
+import { doc, writeBatch } from "firebase/firestore";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { NetflixData } from "../data/NetflixData";
+import { db2 } from "../firebase/firebase";
 import MBAppBar from "../libs/components/MBAppBar";
 import MBSubCard from "../libs/components/MBSubCard";
 import NetflixInformation from "../libs/components/NetflixInformation";
@@ -20,9 +24,9 @@ function AddReminder(props) {
   const state = useLocation().state;
   const mode = state?.mode || REMINDER_MODE.NORMAL;
   const defaultUrl = "https://www.netflix.com/kr/title/81517168?s=a&trkid=13747225&t=cp&vlang=ko&clip=81564946"; //25 21
+  const netflixData = useRecoilValue(NetflixData);
 
   console.log("mode : " + state?.mode);
-  console.log("url : " + state?.url);
   console.log(location);
   const [url, setUrl] = useState("");
   const handleChange = (e) => {
@@ -30,8 +34,28 @@ function AddReminder(props) {
   };
 
   const handleSave = () => {
-    console.log("handleSave-url : " + url);
-    tvControlUtil.launchBrowser(url);
+    if (mode === REMINDER_MODE.NETFLIX) {
+      const batch = writeBatch(db2);
+      const messageTypeRef = doc(db2, "thinq_talk", "message_type");
+      console.log("fucking typeRef : " + messageTypeRef);
+      batch.set(messageTypeRef, { type: "netflix" });
+
+      const contentsRef = doc(db2, "thinq_talk", "contents");
+      console.log("fucking youtubeRef : " + contentsRef);
+
+      console.log("netflix data :" + JSON.stringify(netflixData));
+
+      batch.set(contentsRef, {
+        summary: netflixData.summary,
+        title: netflixData.title,
+        titleid: netflixData.titleid,
+        url: netflixData.url
+      });
+      batch.commit();
+    } else {
+      console.log("handleSave-url : " + url);
+      tvControlUtil.launchBrowser(url);
+    }
   };
 
   const [value, setValue] = useState(new Date());

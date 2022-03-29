@@ -5,6 +5,8 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSetRecoilState } from "recoil";
+import { NetflixData } from "../../data/NetflixData";
 
 const Image = styled("img")({
   width: "100%"
@@ -21,11 +23,21 @@ const getHttpsUrl = (url) => {
   return undefined;
 };
 
+const getTitleId = (originaUrl) => {
+  if (originaUrl !== undefined) {
+    var regex = /[^0-9]/g; // 숫자가 아닌 문자열을 선택하는 정규식
+    const url = originaUrl.split("?")[0].replace(regex, "");
+    console.log("nexflix titleId : " + url);
+    return url;
+  }
+};
+
 function NetflixInformation(props) {
   // const { loading = false } = props;
   const [loading, setLoading] = useState(true);
   let result = { title: "", imageUrl: "", synopsis: "" };
   const [data, setData] = useState(result);
+  const setNeflixData = useSetRecoilState(NetflixData);
 
   const crawl = async () => {
     const getInformation = () => {
@@ -33,11 +45,9 @@ function NetflixInformation(props) {
         const httpsUrl = getHttpsUrl(props.url);
         console.log("props.url :" + props.url);
         console.log("httpsUrl :" + httpsUrl);
-        if (httpsUrl !== undefined) {
-          var regex = /[^0-9]/g; // 숫자가 아닌 문자열을 선택하는 정규식
-          const url = httpsUrl.split("?")[0].replace(regex, "");
-          console.log("nexflix titleId : " + url);
-          const titleId = url;
+
+        const titleId = getTitleId(httpsUrl);
+        if (titleId !== undefined) {
           console.log("titleId : " + titleId);
           //return axios.get("https://my-nodejs-test-app.herokuapp.com/api/crawling/netflix?titleId=" + titleId); //heroku
           return axios.get("https://asia-northeast3-netflix-crawling.cloudfunctions.net/app/api/crawling/netflix?titleId=" + titleId); //firebase
@@ -56,6 +66,10 @@ function NetflixInformation(props) {
         console.log("result.imageUrl is " + res.imageUrl);
         setData({ title: res.title, imageUrl: res.imageUrl, synopsis: res.synopsis });
         setLoading(false);
+
+        const url = getHttpsUrl(props.url);
+        const titleId = getTitleId(url);
+        setNeflixData({title:res.title, titleid:titleId, summary:res.synopsis, url:url});
       });
   };
 
