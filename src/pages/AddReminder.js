@@ -13,6 +13,7 @@ import MBAppBar from "../libs/components/MBAppBar";
 import MBSubCard from "../libs/components/MBSubCard";
 import NetflixInformation from "../libs/components/NetflixInformation";
 import { REMINDER_MODE } from "../libs/constant/Constant";
+import { tvControlUtil } from "../util/tvControlUtil";
 
 const StyledPaper = styled(Paper)(() => ({
   minHeight: "100vh",
@@ -63,13 +64,15 @@ function AddReminder(props) {
       }
     }
 
-    const batch = writeBatch(db);
-    const messageTypeRef = doc(db, "thinq_talk", "message_type");
-    batch.set(messageTypeRef, { type: type });
+    tvControlUtil.launchOneshotOverlay(type, () => {
+      const batch = writeBatch(db);
+      const messageTypeRef = doc(db, "thinq_talk", "message_type");
+      batch.set(messageTypeRef, { type: type });
 
-    const contentsRef = doc(db, "thinq_talk", "contents");
-    batch.set(contentsRef, data);
-    batch.commit();
+      const contentsRef = doc(db, "thinq_talk", "contents");
+      batch.set(contentsRef, data);
+      batch.commit();
+    });
 
     existActivity();
   };
