@@ -30,8 +30,12 @@ public class TVConnect extends CordovaPlugin {
     public static final String PREFERENCES_NAME = "preference";
     private ICDVInterface sInterface;
 
+    private static final int MODE_WEB = 0;
+    private static final int MODE_NETFLIX = 1;
+
     private static final int CONNECT_TV = 0;
     private static final int LAUNCH_WEBAPP = 1;
+    private static final int GOTO = 2;
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -46,6 +50,13 @@ public class TVConnect extends CordovaPlugin {
             case LAUNCH_WEBAPP:
                 Log.e("2MB", "TVConnect LAUNCH_WEBAPP");
                 webView.loadUrl("javascript:launchWebApp()");
+                break;
+            case GOTO:
+                int mode = msg.arg1;
+                String url = (String)msg.obj;
+                url = url.replaceAll("\"", "");
+                Log.e("2MB", "TVConnect goto reminder mode : " + mode + " url :" + url);
+                webView.loadUrl("javascript:gotoAddReminder(" + mode  + ", \"" + url + "\")");
                 break;
             default:
                 break;
@@ -207,7 +218,7 @@ public class TVConnect extends CordovaPlugin {
                 callbackContext.success("2MB Wake-on-LAN packet sent.");
             } catch(Exception e){
                 Log.i("2MB", "2MB Exception thrown." + e);
-                callbackContext.error("2MB fuck you.");
+                callbackContext.error("2MB startTurnOnTV error.");
             }
         return;
     }
@@ -309,5 +320,11 @@ public class TVConnect extends CordovaPlugin {
         startTurnOnTV();
         mHandler.removeMessages(CONNECT_TV);
         mHandler.sendEmptyMessageDelayed(CONNECT_TV, 5000);
+    }
+
+    public void gotoAddReminder(int mode, String url) {
+        Log.e("2MB", "TVConnect gotoAddReminder");
+        mHandler.removeMessages(GOTO);
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(GOTO, mode, 0, url), 500);
     }
 }

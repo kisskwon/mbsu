@@ -1,7 +1,9 @@
 import { createTheme, ThemeProvider } from "@mui/material";
 import { useState } from "react";
 import { HashRouter, useRoutes } from "react-router-dom";
+import { RecoilRoot } from "recoil";
 import ScrollToTop from "./components/ScrollToTop";
+import AddReminder from "./pages/AddReminder";
 import AlarmSetting from "./pages/AlarmSetting";
 import Calendar from "./pages/Calendar";
 import Car from "./pages/Car";
@@ -12,11 +14,10 @@ import Memo from "./pages/Memo";
 import MemoGuide from "./pages/MemoGuide";
 import NaviSetting from "./pages/NaviSetting";
 import RegionSearch from "./pages/RegionSearch";
+import Reminder from "./pages/Reminder";
 import Slogan from "./pages/Slogan";
 import Talk from "./pages/Talk";
 import Weather from "./pages/Weather";
-import Reminder from "./pages/Reminder";
-import AddReminder from "./pages/AddReminder";
 
 const darkTheme = createTheme({
   palette: {
@@ -47,12 +48,14 @@ function App() {
   };
 
   return (
-    <ThemeProvider theme={darkTheme}>
-      <HashRouter>
-        <ScrollToTop />
-        <AppRoutes />
-      </HashRouter>
-    </ThemeProvider>
+    <RecoilRoot>
+      <ThemeProvider theme={darkTheme}>
+        <HashRouter>
+          <ScrollToTop />
+          <AppRoutes />
+        </HashRouter>
+      </ThemeProvider>
+    </RecoilRoot>
   );
 }
 

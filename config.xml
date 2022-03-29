@@ -17,8 +17,5 @@
     <platform name="android">
         <preference name="hostname" value="localhost" />
         <preference name="AndroidInsecureFileModeEnabled" value="true" />
-        <edit-config file="AndroidManifest.xml" target="/manifest" mode="merge">
-            <application android:usesCleartextTraffic="true" />
-        </edit-config>
     </platform>
 </widget>

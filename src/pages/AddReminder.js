@@ -1,21 +1,19 @@
 import styled from "@emotion/styled";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { CardContent, Paper, Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { doc, writeBatch } from "firebase/firestore";
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { NetflixData } from "../data/NetflixData";
+import { db } from "../firebase/firebase";
+import Lottie from "../libs/components/Lottie";
 import MBAppBar from "../libs/components/MBAppBar";
 import MBSubCard from "../libs/components/MBSubCard";
-import DateTimePicker from "@mui/lab/DateTimePicker";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import NetflixInformation from "../libs/components/NetflixInformation";
+import { REMINDER_MODE } from "../libs/constant/Constant";
 import { tvControlUtil } from "../util/tvControlUtil";
 
 const StyledPaper = styled(Paper)(() => ({
@@ -24,15 +22,66 @@ const StyledPaper = styled(Paper)(() => ({
 
 function AddReminder(props) {
   const navigate = useNavigate();
+  const state = useLocation().state;
+  const mode = state?.mode || REMINDER_MODE.NORMAL;
+  const defaultUrl = "https://www.netflix.com/kr/title/81517168?s=a&trkid=13747225&t=cp&vlang=ko&clip=81564946"; //25 21
+  const netflixData = useRecoilValue(NetflixData);
+  const [showProgress, setShowProgress] = useState(false);
 
-  const [url, setUrl] = useState("");
+  console.log("mode : " + state?.mode);
+  console.log(location);
+  const [webTitle, setWebTitle] = useState("");
   const handleChange = (e) => {
-    setUrl(e.target.value);
+    setWebTitle(e.target.value);
   };
 
+  const existActivity = () => {
+    try {
+      navigator.app.exitApp();
+    } catch(e) {
+      navigate(-1);
+    }
+  }
+
   const handleSave = () => {
-    console.log("handleSave-url : " + url);
-    tvControlUtil.launchBrowser(url);
+    let type = "shopping";
+    let data = {
+      title: webTitle,
+      url: state?.url
+    };
+    if (mode === REMINDER_MODE.NETFLIX) {
+      console.log("netflix data :" + JSON.stringify(netflixData));
+      type = "netflix";
+      data = {
+        summary: netflixData.summary,
+        title: netflixData.title,
+        titleid: netflixData.titleid,
+        url: netflixData.url
+      };
+    } else {
+      if (webTitle === "") {
+        alert("title 을 입력하셔야죠...");
+        existActivity();
+        return;
+      }
+    }
+
+    setShowProgress(true);
+    tvControlUtil.launchOneshotOverlay(type, () => {
+      const batch = writeBatch(db);
+      const messageTypeRef = doc(db, "thinq_talk", "message_type");
+      batch.set(messageTypeRef, { type: type });
+
+      const contentsRef = doc(db, "thinq_talk", "contents");
+      batch.set(contentsRef, data);
+      batch.commit();
+    }, () => {
+      console.log("launchOneshotOverlay error...");
+      window.cordova?.plugins?.TVConnect.toast("TV 연결에 실패하여 종료합니다.");
+      existActivity();
+    });
+
+    //existActivity();
   };
 
   const [value, setValue] = useState(new Date());
@@ -50,84 +99,72 @@ function AddReminder(props) {
       <StyledPaper square>
         <div style={{ padding: "20px", backgroundColor: "#272727" }}>
           <Typography variant="h5" color="#90caf9" fontWeight="bold">
-            알림 받을 내용을 추가하세요.
+          {showProgress === true ? "TV에 전송중입니다. 잠시만 기다려주세요":"알림 받을 내용을 추가하세요."}
           </Typography>
         </div>
-        <MBSubCard>
-          <div
-            style={{
-              display: "grid",
-              width: "90%",
-              margin: "auto",
-              marginBottom: "15px",
-              marginTop: "15px",
-            }}
-          >
-            <Button onClick={() => tvControlUtil.connect()}>
-              Connect Service
-            </Button>
-          </div>
-        </MBSubCard>
-        <MBSubCard>
-          <div
-            style={{
-              display: "grid",
-              width: "90%",
-              margin: "auto",
-              marginBottom: "15px",
-              marginTop: "15px",
-            }}
-          >
-            <TextField
-              id="reminder-title"
-              label="내용 입력"
-              variant="outlined"
-              margin="normal"
-            />
-            <TextField
-              id="reminder-url"
-              label="URL 입력"
-              multiline
-              margin="normal"
-              onChange={handleChange}
-            />
-            {/* <FormControl margin="normal">
-              <FormLabel>알림 시간 설정</FormLabel>
-              <RadioGroup
-                row
-                name="row-radio-buttons-group"
-                onChange={handleTimeSetChange}
-              >
-                <FormControlLabel
-                  value="atHome"
-                  control={<Radio />}
-                  label="집에 도착하면 바로 실행"
-                />
-                <FormControlLabel
-                  value="onTime"
-                  control={<Radio />}
-                  label="시간 선택"
-                />
-              </RadioGroup>
-            </FormControl>
 
-            {timeType === "onTime" && (
-              <LocalizationProvider
-                dateAdapter={AdapterDateFns}
-                id="date-time-picker"
-              >
-                <DateTimePicker
-                  renderInput={(props) => <TextField {...props} />}
-                  value={value}
-                  onChange={(newValue) => {
-                    setValue(newValue);
-                  }}
-                />
-              </LocalizationProvider>
-            )} */}
-          </div>
+        <MBSubCard>
+          {showProgress === true ?
+            <div
+              style={{
+                display: "grid",
+                width: "90%",
+                height:"500",
+                margin: "auto",
+                marginBottom: "15px",
+                marginTop: "15px",
+                display: "flex",
+                justifyContent: "center"
+              }}
+            >
+              <Lottie/>
+            </div>
+
+          :  mode === REMINDER_MODE.NETFLIX ? (
+            <div
+              style={{
+                display: "grid",
+                width: "90%",
+                margin: "auto",
+                marginBottom: "15px",
+                marginTop: "15px",
+              }}
+            >
+              <NetflixInformation url={state?.url || defaultUrl} />
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "grid",
+                width: "90%",
+                margin: "auto",
+                marginBottom: "15px",
+                marginTop: "15px",
+              }}
+            >
+              <TextField
+                id="reminder-title"
+                label="웹내용 입력"
+                variant="outlined"
+                margin="normal"
+                onChange={handleChange}
+                autoFocus
+              />
+              <TextField
+                disabled
+                id="reminder-url"
+                label="URL 입력"
+                multiline
+                margin="normal"
+                value={state?.url}
+              />
+            </div>
+          )}
         </MBSubCard>
       </StyledPaper>
+      {showProgress === true ?
+      <div></div>
+      :
       <Stack
         direction="row"
         justifyContent="space-evenly"
@@ -146,15 +183,16 @@ function AddReminder(props) {
           variant="text"
           sx={{ fontWeight: "bold" }}
           onClick={() => {
-            navigate(-1);
+            existActivity();
           }}
         >
           취소
         </Button>
         <Button variant="text" sx={{ fontWeight: "bold" }} onClick={handleSave}>
-          실행
+          저장
         </Button>
       </Stack>
+      }
     </>
   );
 }

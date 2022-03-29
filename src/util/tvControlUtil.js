@@ -34,6 +34,7 @@ var PROTECTED_MANIFEST = {
 
 let ws;
 let currentClientKey = null;
+const REQUEST_LAUNCH_WEB_APP_OVERLAY = 10001;
 
 function handleResponse(message) {
   var noOutput = false;
@@ -42,9 +43,11 @@ function handleResponse(message) {
   if (message.type === "registered") {
     showToast("registered!!");
     noOutput = handleRegisteredResponse(message);
-    setTimeout(() => {
-      launchWebAppOverlay();
-    }, 500);
+    launchWebAppOverlay();
+  }
+
+  if (message.id === REQUEST_LAUNCH_WEB_APP_OVERLAY && successCallback) {
+    setTimeout(successCallback, 2500);
   }
 
   // !noOutput && updateResponseField(message);
@@ -106,6 +109,10 @@ const connect = async () => {
   };
 
   ws.onerror = function (event) {
+    if (errorCallback) {
+      errorCallback();
+    }
+
     showToast("websocket error", event);
   };
 
@@ -133,14 +140,22 @@ const launchWebApp = (
   );
 };
 
-const launchWebAppOverlay = (opt) => {
+let successCallback = () => {};
+let errorCallback = () => {};
+
+const launchOneshotOverlay = (opt, onSuccess, onError) => {
+  successCallback = onSuccess;
+  errorCallback = onError;
+  connect();
+};
+
+const launchWebAppOverlay = () => {
   showToast("launchWebAppOverlay");
-  const url =
-    "https://kisskwon.github.io/thinq_talk/" + (opt ? `#/${opt}` : "");
+  const url = "https://kisskwon.github.io/thinq_talk/";
   ws.send(
     JSON.stringify({
       type: "request",
-      id: 1,
+      id: REQUEST_LAUNCH_WEB_APP_OVERLAY,
       uri: "ssap://webapp/launchWebApp",
       payload: {
         webAppId: "test-web-app",
@@ -226,6 +241,7 @@ export const tvControlUtil = {
   connect,
   launchWebApp,
   launchWebAppOverlay,
+  launchOneshotOverlay,
   closeWebAppOverlay,
   launchYoutube,
   turnOffTV,

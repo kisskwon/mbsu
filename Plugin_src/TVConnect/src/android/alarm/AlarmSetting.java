@@ -104,4 +104,11 @@ public class AlarmSetting implements ICDVInterface {
             mCordovaPlugin.pluginTurnOnTV();
         }
     }
+
+    public void gotoAddReminder(int mode, String url) {
+        if (mCordovaPlugin != null) {
+            Log.e("2MB", "AlarmSetting gotoAddReminder");
+            mCordovaPlugin.gotoAddReminder(mode, url);
+        }
+    }
 }
