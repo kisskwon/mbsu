@@ -22,6 +22,7 @@ function AddReminder(props) {
   const defaultUrl = "https://www.netflix.com/kr/title/81517168?s=a&trkid=13747225&t=cp&vlang=ko&clip=81564946"; //25 21
 
   console.log("mode : " + state?.mode);
+  console.log("url : " + state?.url);
   console.log(location);
   const [url, setUrl] = useState("");
   const handleChange = (e) => {
@@ -61,7 +62,9 @@ function AddReminder(props) {
               marginTop: "15px",
             }}
           >
-            <Button onClick={() => tvControlUtil.connect()}>Connect Service</Button>
+            <Button onClick={() => tvControlUtil.connect()}>
+              Connect Service
+            </Button>
           </div>
         </MBSubCard>
         <MBSubCard>
@@ -72,7 +75,7 @@ function AddReminder(props) {
                 width: "90%",
                 margin: "auto",
                 marginBottom: "15px",
-                marginTop: "15px"
+                marginTop: "15px",
               }}
             >
               <NetflixInformation url={state?.url || defaultUrl} />
@@ -84,11 +87,23 @@ function AddReminder(props) {
                 width: "90%",
                 margin: "auto",
                 marginBottom: "15px",
-                marginTop: "15px"
+                marginTop: "15px",
               }}
             >
-              <TextField id="reminder-title" label="웹내용 입력" variant="outlined" margin="normal" />
-              <TextField id="reminder-url" label="URL 입력" multiline margin="normal" onChange={handleChange} />
+              <TextField
+                id="reminder-title"
+                label="웹내용 입력"
+                variant="outlined"
+                margin="normal"
+              />
+              <TextField
+                id="reminder-url"
+                label="URL 입력"
+                multiline
+                margin="normal"
+                onChange={handleChange}
+                value={state?.url}
+              />
             </div>
           )}
         </MBSubCard>

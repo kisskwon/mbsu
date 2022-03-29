@@ -73,7 +73,7 @@ function Home(props) {
             </Typography>
           </CardContent>
         </MBCard>
-        <MBCard action="알림이" to="/reminder">
+        <MBCard action="알림이" to="/addReminder">
           <CardContent>
             <Typography variant="subtitle2" color={"text.secondary"}>
               띵큐 알림이
