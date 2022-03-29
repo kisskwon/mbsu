@@ -109,6 +109,10 @@ const connect = async () => {
   };
 
   ws.onerror = function (event) {
+    if (errorCallback) {
+      errorCallback();
+    }
+
     showToast("websocket error", event);
   };
 
@@ -137,9 +141,11 @@ const launchWebApp = (
 };
 
 let successCallback = () => {};
+let errorCallback = () => {};
 
-const launchOneshotOverlay = (opt, onSuccess) => {
+const launchOneshotOverlay = (opt, onSuccess, onError) => {
   successCallback = onSuccess;
+  errorCallback = onError;
   connect();
 };
 

@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { NetflixData } from "../data/NetflixData";
 import { db } from "../firebase/firebase";
+import Lottie from "../libs/components/Lottie";
 import MBAppBar from "../libs/components/MBAppBar";
 import MBSubCard from "../libs/components/MBSubCard";
 import NetflixInformation from "../libs/components/NetflixInformation";
@@ -25,6 +26,7 @@ function AddReminder(props) {
   const mode = state?.mode || REMINDER_MODE.NORMAL;
   const defaultUrl = "https://www.netflix.com/kr/title/81517168?s=a&trkid=13747225&t=cp&vlang=ko&clip=81564946"; //25 21
   const netflixData = useRecoilValue(NetflixData);
+  const [showProgress, setShowProgress] = useState(false);
 
   console.log("mode : " + state?.mode);
   console.log(location);
@@ -64,6 +66,7 @@ function AddReminder(props) {
       }
     }
 
+    setShowProgress(true);
     tvControlUtil.launchOneshotOverlay(type, () => {
       const batch = writeBatch(db);
       const messageTypeRef = doc(db, "thinq_talk", "message_type");
@@ -72,9 +75,13 @@ function AddReminder(props) {
       const contentsRef = doc(db, "thinq_talk", "contents");
       batch.set(contentsRef, data);
       batch.commit();
+    }, () => {
+      console.log("launchOneshotOverlay error...");
+      window.cordova?.plugins?.TVConnect.toast("TV 연결에 실패하여 종료합니다.");
+      existActivity();
     });
 
-    existActivity();
+    //existActivity();
   };
 
   const [value, setValue] = useState(new Date());
@@ -92,12 +99,28 @@ function AddReminder(props) {
       <StyledPaper square>
         <div style={{ padding: "20px", backgroundColor: "#272727" }}>
           <Typography variant="h5" color="#90caf9" fontWeight="bold">
-            알림 받을 내용을 추가하세요.
+          {showProgress === true ? "TV에 전송중입니다. 잠시만 기다려주세요":"알림 받을 내용을 추가하세요."}
           </Typography>
         </div>
 
         <MBSubCard>
-          {mode === REMINDER_MODE.NETFLIX ? (
+          {showProgress === true ?
+            <div
+              style={{
+                display: "grid",
+                width: "90%",
+                height:"500",
+                margin: "auto",
+                marginBottom: "15px",
+                marginTop: "15px",
+                display: "flex",
+                justifyContent: "center"
+              }}
+            >
+              <Lottie/>
+            </div>
+
+          :  mode === REMINDER_MODE.NETFLIX ? (
             <div
               style={{
                 display: "grid",
@@ -139,6 +162,9 @@ function AddReminder(props) {
           )}
         </MBSubCard>
       </StyledPaper>
+      {showProgress === true ?
+      <div></div>
+      :
       <Stack
         direction="row"
         justifyContent="space-evenly"
@@ -166,6 +192,7 @@ function AddReminder(props) {
           저장
         </Button>
       </Stack>
+      }
     </>
   );
 }
