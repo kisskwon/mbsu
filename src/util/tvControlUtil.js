@@ -214,6 +214,20 @@ const turnOffTV = () => {
   );
 };
 
+const launchBrowser = (url) => {
+  showToast("launchBrowser-url: " + url);
+  ws.send(
+    JSON.stringify({
+      type: "request",
+      id: 1,
+      uri: "ssap://system.launcher/open",
+      payload: {
+        target: url,
+      },
+    })
+  );
+};
+
 window.tvconnect = connect;
 window.launchWebApp = launchWebApp;
 
@@ -225,6 +239,7 @@ export const tvControlUtil = {
   closeWebAppOverlay,
   launchYoutube,
   turnOffTV,
+  launchBrowser,
 };
 
 function showToast(msg, param) {
