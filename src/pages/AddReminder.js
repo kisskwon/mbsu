@@ -95,6 +95,7 @@ function AddReminder(props) {
                 label="웹내용 입력"
                 variant="outlined"
                 margin="normal"
+                autoFocus
               />
               <TextField
                 id="reminder-url"
