@@ -218,7 +218,7 @@ public class TVConnect extends CordovaPlugin {
                 callbackContext.success("2MB Wake-on-LAN packet sent.");
             } catch(Exception e){
                 Log.i("2MB", "2MB Exception thrown." + e);
-                callbackContext.error("2MB fuck you.");
+                callbackContext.error("2MB startTurnOnTV error.");
             }
         return;
     }

@@ -24,7 +24,7 @@ const getTime = () => {
 };
 
 const getDays = () => {
-  let dayofweeks = "fuck";
+  let dayofweeks = "";
   let savedDay = localStorage.getItem("alarmDay");
   if (savedDay === null) {
     dayofweeks = "월, 화, 수, 목, 금";

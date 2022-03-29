@@ -15,7 +15,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             AlarmSetting alarmSetting = AlarmSetting.getInstance(context);
             alarmSetting.setAlarm();
         } else {
-            Log.e("2MB", "fucking YSY");
+            Log.e("2MB", "AlarmReceiver action : " + intent.getAction());
             Toast.makeText(context, "alarm start...", Toast.LENGTH_LONG).show();
             AlarmSetting.getInstance(context).turnOnTv();
         }
