@@ -3,7 +3,6 @@ import { List, ListItem, ListItemText, Paper } from "@mui/material";
 import {
   collection,
   doc,
-  getDoc,
   onSnapshot,
   setDoc,
   writeBatch,
@@ -21,10 +20,10 @@ function Talk(props) {
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "thinq_talk"), (snapshot) => {
       snapshot.docChanges().forEach((change) => {
-        const doc = change.doc;
-        switch (doc.id) {
+        const changed = change.doc;
+        switch (changed.id) {
           case "application":
-            if (!doc.data().poweron) {
+            if (!changed.data().poweron) {
               tvControlUtil.closeWebAppOverlay();
               setDoc(doc(db, "thinq_talk", "application"), {
                 poweron: true,
@@ -32,10 +31,19 @@ function Talk(props) {
             }
             break;
           case "youtube":
-            if (change.type !== "added" && doc.data().play) {
+            if (change.type !== "added" && changed.data().play) {
               tvControlUtil.launchYoutube();
               setDoc(doc(db, "thinq_talk", "youtube"), {
                 play: false,
+              });
+            }
+            break;
+          case "message_type":
+            if (change.type !== "added" && changed.data().type === "gallery") {
+              tvControlUtil.launchOneshotOverlay("image", () => {
+                setDoc(doc(db, "thinq_talk", "message_type"), {
+                  type: "slider",
+                });
               });
             }
             break;
