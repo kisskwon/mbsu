@@ -27,9 +27,9 @@ function AddReminder(props) {
 
   console.log("mode : " + state?.mode);
   console.log(location);
-  const [url, setUrl] = useState("");
+  const [webTitle, setWebTitle] = useState("");
   const handleChange = (e) => {
-    setUrl(e.target.value);
+    setWebTitle(e.target.value);
   };
 
   const existActivity = () => {
@@ -41,29 +41,36 @@ function AddReminder(props) {
   }
 
   const handleSave = () => {
+    let type = "shopping";
+    let data = {
+      title: webTitle,
+      url: state?.url
+    };
     if (mode === REMINDER_MODE.NETFLIX) {
-      const batch = writeBatch(db);
-      const messageTypeRef = doc(db, "thinq_talk", "message_type");
-      console.log("fucking typeRef : " + messageTypeRef);
-      batch.set(messageTypeRef, { type: "netflix" });
-
-      const contentsRef = doc(db, "thinq_talk", "contents");
-      console.log("fucking youtubeRef : " + contentsRef);
-
       console.log("netflix data :" + JSON.stringify(netflixData));
-
-      batch.set(contentsRef, {
+      type = "netflix";
+      data = {
         summary: netflixData.summary,
         title: netflixData.title,
         titleid: netflixData.titleid,
         url: netflixData.url
-      });
-      batch.commit();
+      };
     } else {
-      //TODO change
-      // console.log("handleSave-url : " + url);
-      // tvControlUtil.launchBrowser(url);
+      if (webTitle === "") {
+        alert("title 을 입력하셔야죠...");
+        existActivity();
+        return;
+      }
     }
+
+    const batch = writeBatch(db);
+    const messageTypeRef = doc(db, "thinq_talk", "message_type");
+    batch.set(messageTypeRef, { type: type });
+
+    const contentsRef = doc(db, "thinq_talk", "contents");
+    batch.set(contentsRef, data);
+    batch.commit();
+
     existActivity();
   };
 
@@ -114,14 +121,15 @@ function AddReminder(props) {
                 label="웹내용 입력"
                 variant="outlined"
                 margin="normal"
+                onChange={handleChange}
                 autoFocus
               />
               <TextField
+                disabled
                 id="reminder-url"
                 label="URL 입력"
                 multiline
                 margin="normal"
-                onChange={handleChange}
                 value={state?.url}
               />
             </div>
