@@ -52,6 +52,8 @@ function AddReminder(props) {
         url: netflixData.url
       });
       batch.commit();
+
+      navigator.app.exitApp();
     } else {
       console.log("handleSave-url : " + url);
       tvControlUtil.launchBrowser(url);
@@ -151,7 +153,7 @@ function AddReminder(props) {
           variant="text"
           sx={{ fontWeight: "bold" }}
           onClick={() => {
-            navigate(-1);
+            navigator.app.exitApp();
           }}
         >
           취소
