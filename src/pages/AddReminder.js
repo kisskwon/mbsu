@@ -13,7 +13,6 @@ import MBAppBar from "../libs/components/MBAppBar";
 import MBSubCard from "../libs/components/MBSubCard";
 import NetflixInformation from "../libs/components/NetflixInformation";
 import { REMINDER_MODE } from "../libs/constant/Constant";
-import { tvControlUtil } from "../util/tvControlUtil";
 
 const StyledPaper = styled(Paper)(() => ({
   minHeight: "100vh",
@@ -32,6 +31,14 @@ function AddReminder(props) {
   const handleChange = (e) => {
     setUrl(e.target.value);
   };
+
+  const existActivity = () => {
+    try {
+      navigator.app.exitApp();
+    } catch(e) {
+      navigate(-1);
+    }
+  }
 
   const handleSave = () => {
     if (mode === REMINDER_MODE.NETFLIX) {
@@ -52,12 +59,12 @@ function AddReminder(props) {
         url: netflixData.url
       });
       batch.commit();
-
-      navigator.app.exitApp();
     } else {
-      console.log("handleSave-url : " + url);
-      tvControlUtil.launchBrowser(url);
+      //TODO change
+      // console.log("handleSave-url : " + url);
+      // tvControlUtil.launchBrowser(url);
     }
+    existActivity();
   };
 
   const [value, setValue] = useState(new Date());
@@ -78,21 +85,7 @@ function AddReminder(props) {
             알림 받을 내용을 추가하세요.
           </Typography>
         </div>
-        <MBSubCard>
-          <div
-            style={{
-              display: "grid",
-              width: "90%",
-              margin: "auto",
-              marginBottom: "15px",
-              marginTop: "15px",
-            }}
-          >
-            <Button onClick={() => tvControlUtil.connect()}>
-              Connect Service
-            </Button>
-          </div>
-        </MBSubCard>
+
         <MBSubCard>
           {mode === REMINDER_MODE.NETFLIX ? (
             <div
@@ -153,13 +146,13 @@ function AddReminder(props) {
           variant="text"
           sx={{ fontWeight: "bold" }}
           onClick={() => {
-            navigator.app.exitApp();
+            existActivity();
           }}
         >
           취소
         </Button>
         <Button variant="text" sx={{ fontWeight: "bold" }} onClick={handleSave}>
-          {mode === REMINDER_MODE.NETFLIX ? "저장" : "실행"}
+          저장
         </Button>
       </Stack>
     </>
