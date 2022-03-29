@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { NetflixData } from "../data/NetflixData";
-import { db2 } from "../firebase/firebase";
+import { db } from "../firebase/firebase";
 import MBAppBar from "../libs/components/MBAppBar";
 import MBSubCard from "../libs/components/MBSubCard";
 import NetflixInformation from "../libs/components/NetflixInformation";
@@ -35,12 +35,12 @@ function AddReminder(props) {
 
   const handleSave = () => {
     if (mode === REMINDER_MODE.NETFLIX) {
-      const batch = writeBatch(db2);
-      const messageTypeRef = doc(db2, "thinq_talk", "message_type");
+      const batch = writeBatch(db);
+      const messageTypeRef = doc(db, "thinq_talk", "message_type");
       console.log("fucking typeRef : " + messageTypeRef);
       batch.set(messageTypeRef, { type: "netflix" });
 
-      const contentsRef = doc(db2, "thinq_talk", "contents");
+      const contentsRef = doc(db, "thinq_talk", "contents");
       console.log("fucking youtubeRef : " + contentsRef);
 
       console.log("netflix data :" + JSON.stringify(netflixData));
@@ -159,7 +159,7 @@ function AddReminder(props) {
           취소
         </Button>
         <Button variant="text" sx={{ fontWeight: "bold" }} onClick={handleSave}>
-          실행
+          {mode === REMINDER_MODE.NETFLIX ? "저장" : "실행"}
         </Button>
       </Stack>
     </>
