@@ -32,11 +32,23 @@
           <data android:mimeType="text/plain" />
         </intent-filter>
       </activity>
+      <service android:name="com.lge.mbsu.tvconnect.hooking.HubNotificationService"
+        android:exported="false"
+        android:label="@string/app_name"
+        android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+        <intent-filter>
+          <action android:name="android.service.notification.NotificationListenerService" />
+        </intent-filter>
+      </service>
     </config-file>
     <source-file src="src/android/TVConnect.java" target-dir="src/com/lge/mbsu/tvconnect" />
     <source-file src="src/android/ICDVInterface.java" target-dir="src/com/lge/mbsu/tvconnect" />
     <source-file src="src/android/SharingActivity.java" target-dir="src/com/lge/mbsu/tvconnect" />
     <source-file src="src/android/alarm/AlarmReceiver.java" target-dir="src/com/lge/mbsu/tvconnect/alarm" />
     <source-file src="src/android/alarm/AlarmSetting.java" target-dir="src/com/lge/mbsu/tvconnect/alarm" />
+    <source-file src="src/android/hooking/HubNotificationService.java" target-dir="src/com/lge/mbsu/tvconnect/hooking" />
+    <source-file src="src/android/hooking/HookEvent.java" target-dir="src/com/lge/mbsu/tvconnect/hooking" />
+
+    <framework src="org.greenrobot:eventbus:3.2.0" />
   </platform>
 </plugin>

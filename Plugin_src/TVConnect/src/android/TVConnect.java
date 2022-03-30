@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.webkit.ValueCallback;
@@ -36,6 +37,7 @@ public class TVConnect extends CordovaPlugin {
     private static final int CONNECT_TV = 0;
     private static final int LAUNCH_WEBAPP = 1;
     private static final int GOTO = 2;
+    private static final int ON_NOTI_HOOKING = 3;
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -57,6 +59,13 @@ public class TVConnect extends CordovaPlugin {
                 url = url.replaceAll("\"", "");
                 Log.e("2MB", "TVConnect goto reminder mode : " + mode + " url :" + url);
                 webView.loadUrl("javascript:gotoAddReminder(" + mode  + ", \"" + url + "\")");
+                break;
+            case ON_NOTI_HOOKING:
+                Bundle bundle = (Bundle) msg.obj;
+                String from = bundle.getString("from", "");
+                String text = bundle.getString("text", "");
+                Log.d("2MB", from + " " + text);
+                webView.loadUrl("javascript:onReceiveHooking(\"" + from + "\", \"" + text + "\")");
                 break;
             default:
                 break;
@@ -92,6 +101,9 @@ public class TVConnect extends CordovaPlugin {
             sInterface = (ICDVInterface) data;
             sInterface.registerCDVInstance(this);
             return Boolean.TRUE;
+        } else if (id.equals("onNotiHooking")) {
+            mHandler.sendMessage(mHandler.obtainMessage(ON_NOTI_HOOKING, data));
+            return true;
         }
 
         return super.onMessage(id, data);

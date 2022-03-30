@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import MBAppBar from "../libs/components/MBAppBar";
 import MBCard from "../libs/components/MBCard";
 import { format } from "date-fns";
+import { doc, writeBatch } from "firebase/firestore";
+import { db } from "../firebase/firebase";
 
 const StyledPaper = styled(Paper)(() => ({
   minHeight: "100vh",
@@ -31,7 +33,7 @@ const getDays = () => {
   } else {
     let arr = [];
     const json = JSON.parse(savedDay);
-    Object.keys(json).forEach(function(index) {
+    Object.keys(json).forEach(function (index) {
       if (json[index].checked === true) {
         arr.push(json[index].title);
       }
@@ -44,11 +46,26 @@ const getDays = () => {
 function Home(props) {
   const navigate = useNavigate();
   const gotoAddReminder = (mode, nativeUrl) => {
-    console.log("2MB goto addReminder mode : " + mode + " nativeUrl :" + nativeUrl);
+    console.log(
+      "2MB goto addReminder mode : " + mode + " nativeUrl :" + nativeUrl
+    );
     navigate("/addReminder", { state: { mode: mode, url: nativeUrl } });
   };
 
   window.gotoAddReminder = gotoAddReminder;
+
+  window.onReceiveHooking = (from, text) => {
+    console.log("kks", "onReceiveHooking", from, text);
+    const batch = writeBatch(db);
+    batch.set(doc(db, "thinq_talk", "contents"), {
+      from: from,
+      text: text,
+    });
+    batch.set(doc(db, "thinq_talk", "message_type"), {
+      type: "kakaotalk",
+    });
+    batch.commit();
+  };
 
   return (
     <>
