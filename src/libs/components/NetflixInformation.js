@@ -69,7 +69,7 @@ function NetflixInformation(props) {
 
         const url = getHttpsUrl(props.url);
         const titleId = getTitleId(url);
-        setNeflixData({title:res.title, titleid:titleId, summary:res.synopsis, url:url});
+        setNeflixData({title:res.title, titleid:titleId, summary:res.synopsis, url:res.imageUrl});
       });
   };
 
