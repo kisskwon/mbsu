@@ -135,7 +135,7 @@ function AddReminder(props) {
 
   return (
     <>
-      <MBAppBar title={"알림이 추가"} sub />
+      <MBAppBar title={"알림이 추가"} sub reminder/>
       <StyledPaper square>
         <div style={{ padding: "20px", backgroundColor: "#272727" }}>
           <Typography variant="h5" color="#90caf9" fontWeight="bold">

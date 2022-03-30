@@ -49,7 +49,9 @@ function MBAppBar(props) {
               aria-label="menu"
               sx={{ mr: 2 }}
               onClick={() => {
-                if (props.sub) {
+                if (props.reminder) {
+                  navigator.app.exitApp();
+                } else if (props.sub) {
                   navigate(-1);
                 } else {
                   setShowSideMenu(true);
