@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
-import { NetflixData } from "../../data/NetflixData";
+import { NetflixData } from "../../data/CrawlData";
 
 const Image = styled("img")({
   width: "100%"

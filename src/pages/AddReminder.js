@@ -2,17 +2,17 @@ import styled from "@emotion/styled";
 import { Paper, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
 import { collection, doc, getDocs, onSnapshot, setDoc, writeBatch } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { NetflixData } from "../data/NetflixData";
+import { NetflixData, WebCrawlData } from "../data/CrawlData";
 import { db } from "../firebase/firebase";
 import Lottie from "../libs/components/Lottie";
 import MBAppBar from "../libs/components/MBAppBar";
 import MBSubCard from "../libs/components/MBSubCard";
 import NetflixInformation from "../libs/components/NetflixInformation";
+import WebInformation from "../libs/components/WebInformation";
 import { REMINDER_MODE } from "../libs/constant/Constant";
 import { tvControlUtil } from "../util/tvControlUtil";
 
@@ -25,14 +25,12 @@ function AddReminder(props) {
   const state = useLocation().state;
   const mode = state?.mode || REMINDER_MODE.NORMAL;
   const defaultUrl = "https://www.netflix.com/kr/title/81517168?s=a&trkid=13747225&t=cp&vlang=ko&clip=81564946"; //25 21
+  const webDefaulturl = "https://namu.wiki/w/%EA%B9%80%EA%B1%B4%ED%9D%AC/%EB%85%BC%EB%9E%80#s-2";
   const netflixData = useRecoilValue(NetflixData);
+  const webCrawlData = useRecoilValue(WebCrawlData);
   const [showProgress, setShowProgress] = useState(false);
 
   console.log("mode : " + state?.mode);
-  const [webTitle, setWebTitle] = useState("");
-  const handleChange = (e) => {
-    setWebTitle(e.target.value);
-  };
 
   const existActivity = () => {
     try {
@@ -49,8 +47,9 @@ function AddReminder(props) {
   const handleSave = () => {
     let type = "shopping";
     let data = {
-      title: webTitle,
-      url: state?.url
+      summary : webCrawlData.description,
+      title: webCrawlData.title,
+      url: webCrawlData.url,
     };
     if (mode === REMINDER_MODE.NETFLIX) {
       console.log("netflix data :" + JSON.stringify(netflixData));
@@ -61,12 +60,6 @@ function AddReminder(props) {
         titleid: netflixData.titleid,
         url: netflixData.url
       };
-    } else {
-      if (webTitle === "") {
-        alert("title 을 입력하셔야죠...");
-        existActivity();
-        return;
-      }
     }
 
     setShowProgress(true);
@@ -182,23 +175,9 @@ function AddReminder(props) {
                 marginTop: "15px",
               }}
             >
-              <TextField
-                id="reminder-title"
-                label="웹내용 입력"
-                variant="outlined"
-                margin="normal"
-                onChange={handleChange}
-                autoFocus
-              />
-              <TextField
-                disabled
-                id="reminder-url"
-                label="URL 입력"
-                multiline
-                margin="normal"
-                value={state?.url}
-              />
+              <WebInformation url={state?.url || webDefaulturl} />
             </div>
+
           )}
         </MBSubCard>
       </StyledPaper>
