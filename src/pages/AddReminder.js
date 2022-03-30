@@ -36,9 +36,13 @@ function AddReminder(props) {
 
   const existActivity = () => {
     try {
+      console.log("existActivity try");
       navigator.app.exitApp();
+      console.log("existActivity try 2222");
     } catch(e) {
+      console.log("existActivity catch e :" + e);
       navigate(-1);
+      console.log("existActivity catch2222 e :" + e);
     }
   }
 
@@ -93,7 +97,8 @@ function AddReminder(props) {
       const querySnapshot = await getDocs(collection(db, "thinq_talk"));
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
+        console.log("----------------------DOCUMENT NAME ", doc.id, "----------------------");
+        console.table(doc.data());
       });
     };
     logging();
