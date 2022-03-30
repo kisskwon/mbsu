@@ -73,13 +73,13 @@ function Home(props) {
             </Typography>
           </CardContent>
         </MBCard>
-        {/* <MBCard action="알림이" to="/addReminder">
+        <MBCard action="알리미" to="/reminder">
           <CardContent>
             <Typography variant="subtitle2" color={"text.secondary"}>
-              띵큐 알림이
+              띵큐 알리미
             </Typography>
           </CardContent>
-        </MBCard> */}
+        </MBCard>
         <MBCard title="기본 위젯 설정" action="날씨" to="/weather">
           <CardContent>
             <Typography variant="subtitle2" color={"text.secondary"}>
