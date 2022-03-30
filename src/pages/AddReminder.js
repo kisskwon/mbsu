@@ -3,8 +3,8 @@ import { Paper, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import { doc, writeBatch } from "firebase/firestore";
-import React, { useState } from "react";
+import { collection, doc, getDocs, onSnapshot, setDoc, writeBatch } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { NetflixData } from "../data/NetflixData";
@@ -29,7 +29,6 @@ function AddReminder(props) {
   const [showProgress, setShowProgress] = useState(false);
 
   console.log("mode : " + state?.mode);
-  console.log(location);
   const [webTitle, setWebTitle] = useState("");
   const handleChange = (e) => {
     setWebTitle(e.target.value);
@@ -74,24 +73,60 @@ function AddReminder(props) {
 
       const contentsRef = doc(db, "thinq_talk", "contents");
       batch.set(contentsRef, data);
+
+      const shoppingMode = mode == REMINDER_MODE.NORMAL;
+
+      const playRef = doc(db, "thinq_talk", shoppingMode ? "browser": "netflix");
+      batch.set(playRef, shoppingMode ? {show: false} : {play: false});
       batch.commit();
     }, () => {
       console.log("launchOneshotOverlay error...");
       window.cordova?.plugins?.TVConnect.toast("TV 연결에 실패하여 종료합니다.");
+
       existActivity();
     });
-
-    //existActivity();
   };
 
-  const [value, setValue] = useState(new Date());
+  useEffect(() => {
+    const logging = async () => {
+      //firestore logging
+      const querySnapshot = await getDocs(collection(db, "thinq_talk"));
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+      });
+    };
+    logging();
+  }, []);
 
-  const [timeType, setTimeType] = useState("atHome");
-
-  const handleTimeSetChange = (event) => {
-    console.log(event.target.value);
-    setTimeType(event.target.value);
-  };
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "thinq_talk"), (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        const changed = change.doc;
+        switch (changed.id) {
+          case "browser":
+            if (change.type !== "added" && changed.data().show) {
+              tvControlUtil.launchBrowser(state?.url);
+              setDoc(doc(db, "thinq_talk", "browser"), {
+                show: false,
+              });
+              existActivity();
+            }
+            break;
+          case "netflix":
+            if (change.type !== "added" && changed.data().play) {
+              tvControlUtil.launchNetflix(netflixData.titleid);
+              setDoc(doc(db, "thinq_talk", "netflix"), {
+                play: false,
+              });
+              existActivity();
+            }
+            break;
+        }
+      });
+    });
+    return unsubscribe;
+  }, [netflixData]);
 
   return (
     <>
