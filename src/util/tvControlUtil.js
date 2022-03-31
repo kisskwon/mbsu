@@ -234,6 +234,21 @@ const launchBrowser = (url) => {
   );
 };
 
+const launchNetflix = (titleId) => {
+  showToast("launchNetflix titleId : " + titleId);
+  ws.send(
+    JSON.stringify({
+      type: "request",
+      id: 1,
+      uri: "ssap://system.launcher/launch",
+      payload: {
+        id: "netflix",
+        contentId: "m=https://www.netflix.com/kr/title/" + titleId,
+      },
+    })
+  );
+};
+
 window.tvconnect = connect;
 window.launchWebApp = launchWebApp;
 
@@ -246,6 +261,7 @@ export const tvControlUtil = {
   launchYoutube,
   turnOffTV,
   launchBrowser,
+  launchNetflix,
 };
 
 function showToast(msg, param) {

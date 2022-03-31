@@ -3,6 +3,7 @@ import { useState } from "react";
 import { HashRouter, useRoutes } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import ScrollToTop from "./components/ScrollToTop";
+import FirebaseListener from "./firebase/FirebaseListener";
 import AddReminder from "./pages/AddReminder";
 import AlarmSetting from "./pages/AlarmSetting";
 import Calendar from "./pages/Calendar";
@@ -52,6 +53,7 @@ function App() {
       <ThemeProvider theme={darkTheme}>
         <HashRouter>
           <ScrollToTop />
+          <FirebaseListener />
           <AppRoutes />
         </HashRouter>
       </ThemeProvider>

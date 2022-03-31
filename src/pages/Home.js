@@ -31,7 +31,7 @@ const getDays = () => {
   } else {
     let arr = [];
     const json = JSON.parse(savedDay);
-    Object.keys(json).forEach(function(index) {
+    Object.keys(json).forEach(function (index) {
       if (json[index].checked === true) {
         arr.push(json[index].title);
       }
@@ -44,10 +44,11 @@ const getDays = () => {
 function Home(props) {
   const navigate = useNavigate();
   const gotoAddReminder = (mode, nativeUrl) => {
-    console.log("2MB goto addReminder mode : " + mode + " nativeUrl :" + nativeUrl);
+    console.log(
+      "2MB goto addReminder mode : " + mode + " nativeUrl :" + nativeUrl
+    );
     navigate("/addReminder", { state: { mode: mode, url: nativeUrl } });
   };
-
   window.gotoAddReminder = gotoAddReminder;
 
   return (

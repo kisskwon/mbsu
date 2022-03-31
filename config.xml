@@ -13,9 +13,13 @@
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <hook type="before_prepare" src="scripts/prebuild.js" />
+    <hook type="after_platform_add" src="scripts/updateMainActivity.js" />
 
     <platform name="android">
         <preference name="hostname" value="localhost" />
         <preference name="AndroidInsecureFileModeEnabled" value="true" />
+        <icon src="res/android/television.png" density="xhdpi" />
+        <icon src="res/android/television.png" density="xxhdpi" />
+        <icon src="res/android/television.png" density="xxxhdpi" />
     </platform>
 </widget>

@@ -18,6 +18,7 @@ if (window.cordova) {
     () => {
       console.log("2MB cordova deviceready");
       renderReactDom();
+      window.cordova?.plugins?.TVConnect.toast("cordova deviceready success!");
     },
     false
   );

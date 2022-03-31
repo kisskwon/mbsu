@@ -12,7 +12,9 @@ const NetworkInfoDialog = ({ isOpen, onComplete }) => {
     useRecoilState(tvNetworkInformation); */
   //console.log("isOpen " + isOpen);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
-  const [macAddr, setMacAddr] = useState(localStorage.getItem("macAddr") || "FF:FF:FF:FF:FF:FF");
+  const [macAddr, setMacAddr] = useState(
+    localStorage.getItem("macAddr") || "FF:FF:FF:FF:FF:FF"
+  );
   const [ipAddr, setIpAddr] = useState(localStorage.getItem("ipAddr") || "");
 
   useEffect(() => {
@@ -54,6 +56,7 @@ const NetworkInfoDialog = ({ isOpen, onComplete }) => {
   const handleSave = () => {
     localStorage.setItem("macAddr", macAddr);
     localStorage.setItem("ipAddr", ipAddr);
+    localStorage.setItem("TV_CONNECT_CLIENT_KEY", ""); // reset client key
     //setTVNetworkInfo({ ...tvNetworkInfo, macAddr: macAddr, ipAddr: ipAddr });
     handleDialogClose();
     window.cordova?.plugins?.TVConnect.toast("IP, MAC 를 변경했어요.");
