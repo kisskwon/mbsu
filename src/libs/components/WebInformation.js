@@ -19,7 +19,9 @@ function WebInformation(props) {
   let result = { title: "", imageUrl: "", description: "" };
   const [data, setData] = useState(result);
   const setWebCrawlData = useSetRecoilState(WebCrawlData);
-  const [customDescription, setCustomDescription] = useRecoilState(customDescriptionSelector);
+  const [customDescription, setCustomDescription] = useRecoilState(
+    customDescriptionSelector
+  );
   const handleChange = (e) => {
     setCustomDescription(e.target.value);
   };
@@ -30,7 +32,10 @@ function WebInformation(props) {
         const httpsUrl = props.url;
         console.log("httpsUrl :" + httpsUrl);
         const endcodeUrl = encodeURIComponent(httpsUrl);
-        return axios.get("https://asia-northeast3-netflix-crawling.cloudfunctions.net/app/api/crawling/web?url=" + endcodeUrl); //firebase
+        //return axios.get("https://asia-northeast3-netflix-crawling.cloudfunctions.net/app/api/crawling/web?url=" + endcodeUrl); //firebase
+        return axios.get(
+          "http://bonkab.com:8080/api/crawling/web?url=" + endcodeUrl
+        ); //kbk nas
       } catch (e) {
         console.error(e);
       }
@@ -43,10 +48,18 @@ function WebInformation(props) {
       .then((res) => {
         console.log("result.title is " + res.title);
         console.log("result.imageUrl is " + res.imageUrl);
-        setData({ title: res.title, imageUrl: res.imageUrl, description: res.description });
+        setData({
+          title: res.title,
+          imageUrl: res.imageUrl,
+          description: res.description
+        });
         setLoading(false);
 
-        setWebCrawlData({title:res.title, description:res.description, url:res.imageUrl});
+        setWebCrawlData({
+          title: res.title,
+          description: res.description,
+          url: res.imageUrl
+        });
       });
   };
 
@@ -62,10 +75,10 @@ function WebInformation(props) {
             <Skeleton variant="circular">
               <Avatar />
             </Skeleton>
-          ) :
-          (
-            data.title === "" ? (<></>) :
-            (<Avatar src="https://cdn-icons-png.flaticon.com/512/3081/3081648.png" />)
+          ) : data.title === "" ? (
+            <></>
+          ) : (
+            <Avatar src="https://cdn-icons-png.flaticon.com/512/3081/3081648.png" />
           )}
         </Box>
         <Box sx={{ width: "100%" }}>
@@ -73,9 +86,9 @@ function WebInformation(props) {
             <Skeleton width="100%">
               <Typography>.</Typography>
             </Skeleton>
-          ) :
-          (
-            data.title === "" ? (<></>) :
+          ) : data.title === "" ? (
+            <></>
+          ) : (
             <Typography variant="h5">{data.title}</Typography>
           )}
         </Box>
@@ -103,22 +116,22 @@ function WebInformation(props) {
           </Skeleton>
         ) : (
           <div
-              style={{
-                display: "grid",
-                width: "90%",
-                margin: "auto",
-                marginBottom: "15px",
-                marginTop: "15px",
-              }}
-            >
-              <TextField
-                id="reminder-url"
-                label="보낼 메시지를 직접 작성해보세요."
-                multiline
-                margin="normal"
-                onChange={handleChange}
-              />
-            </div>
+            style={{
+              display: "grid",
+              width: "90%",
+              margin: "auto",
+              marginBottom: "15px",
+              marginTop: "15px"
+            }}
+          >
+            <TextField
+              id="reminder-url"
+              label="보낼 메시지를 직접 작성해보세요."
+              multiline
+              margin="normal"
+              onChange={handleChange}
+            />
+          </div>
         )}
       </Box>
     </div>
