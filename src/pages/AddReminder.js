@@ -47,7 +47,7 @@ function AddReminder(props) {
   const handleSave = () => {
     let type = "shopping";
     let data = {
-      summary : webCrawlData.description,
+      summary : webCrawlData.customDescription !== "" ? webCrawlData.customDescription : webCrawlData.description,
       title: webCrawlData.title,
       url: webCrawlData.url,
     };

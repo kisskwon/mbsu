@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 
 export const NetflixData = atom({
   key: "NetflixData",
@@ -16,5 +16,17 @@ export const WebCrawlData = atom({
     title:"",
     description:"",
     url:"",
+    customDescription:""
+  }
+});
+
+export const customDescriptionSelector = selector({
+  key: "customDescription",
+  get: ({get}) => {
+    const data = get(WebCrawlData);
+    return data.customDescriptionSelector;
+  },
+  set: ({set}, description) => {
+    set(WebCrawlData, (prevData) => ({...prevData, customDescription:description}));
   }
 })

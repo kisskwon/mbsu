@@ -2,11 +2,12 @@ import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 import { styled } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSetRecoilState } from "recoil";
-import { WebCrawlData } from "../../data/CrawlData";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { customDescriptionSelector, WebCrawlData } from "../../data/CrawlData";
 
 const Image = styled("img")({
   width: "100%"
@@ -18,6 +19,10 @@ function WebInformation(props) {
   let result = { title: "", imageUrl: "", description: "" };
   const [data, setData] = useState(result);
   const setWebCrawlData = useSetRecoilState(WebCrawlData);
+  const [customDescription, setCustomDescription] = useRecoilState(customDescriptionSelector);
+  const handleChange = (e) => {
+    setCustomDescription(e.target.value);
+  };
 
   const crawl = async () => {
     const getInformation = () => {
@@ -57,8 +62,10 @@ function WebInformation(props) {
             <Skeleton variant="circular">
               <Avatar />
             </Skeleton>
-          ) : (
-            <Avatar src="https://cdn-icons.flaticon.com/png/512/3165/premium/3165112.png?token=exp=1648618835~hmac=0fbb4b4b1fb60938e532a303b2ee8913" />
+          ) :
+          (
+            data.title === "" ? (<></>) :
+            (<Avatar src="https://cdn-icons-png.flaticon.com/512/3081/3081648.png" />)
           )}
         </Box>
         <Box sx={{ width: "100%" }}>
@@ -66,7 +73,9 @@ function WebInformation(props) {
             <Skeleton width="100%">
               <Typography>.</Typography>
             </Skeleton>
-          ) : (
+          ) :
+          (
+            data.title === "" ? (<></>) :
             <Typography variant="h5">{data.title}</Typography>
           )}
         </Box>
@@ -85,6 +94,31 @@ function WebInformation(props) {
           </Skeleton>
         ) : (
           <Typography>{data.description}</Typography>
+        )}
+      </Box>
+      <Box sx={{ width: "100%" }}>
+        {loading ? (
+          <Skeleton width="100%" height={100}>
+            <Typography>.</Typography>
+          </Skeleton>
+        ) : (
+          <div
+              style={{
+                display: "grid",
+                width: "90%",
+                margin: "auto",
+                marginBottom: "15px",
+                marginTop: "15px",
+              }}
+            >
+              <TextField
+                id="reminder-url"
+                label="보낼 메시지를 직접 작성해보세요."
+                multiline
+                margin="normal"
+                onChange={handleChange}
+              />
+            </div>
         )}
       </Box>
     </div>
