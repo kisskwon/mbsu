@@ -10,7 +10,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { customDescriptionSelector, WebCrawlData } from "../../data/CrawlData";
 
 const Image = styled("img")({
-  width: "100%"
+  width: "100%",
 });
 
 function WebInformation(props) {
@@ -32,10 +32,13 @@ function WebInformation(props) {
         const httpsUrl = props.url;
         console.log("httpsUrl :" + httpsUrl);
         const endcodeUrl = encodeURIComponent(httpsUrl);
-        //return axios.get("https://asia-northeast3-netflix-crawling.cloudfunctions.net/app/api/crawling/web?url=" + endcodeUrl); //firebase
         return axios.get(
-          "http://bonkab.com:8080/api/crawling/web?url=" + endcodeUrl
-        ); //kbk nas
+          "https://asia-northeast3-netflix-crawling.cloudfunctions.net/app/api/crawling/web?url=" +
+            endcodeUrl
+        ); //firebase
+        // return axios.get(
+        //   "http://bonkab.com:8080/api/crawling/web?url=" + endcodeUrl
+        // ); //kbk nas
       } catch (e) {
         console.error(e);
       }
@@ -51,14 +54,14 @@ function WebInformation(props) {
         setData({
           title: res.title,
           imageUrl: res.imageUrl,
-          description: res.description
+          description: res.description,
         });
         setLoading(false);
 
         setWebCrawlData({
           title: res.title,
           description: res.description,
-          url: res.imageUrl
+          url: res.imageUrl,
         });
       });
   };
@@ -121,7 +124,7 @@ function WebInformation(props) {
               width: "90%",
               margin: "auto",
               marginBottom: "15px",
-              marginTop: "15px"
+              marginTop: "15px",
             }}
           >
             <TextField
