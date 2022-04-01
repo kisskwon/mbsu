@@ -20,6 +20,9 @@ function Talk(props) {
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "thinq_talk"), (snapshot) => {
       snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+          return;
+        }
         const changed = change.doc;
         switch (changed.id) {
           case "application":
@@ -31,7 +34,7 @@ function Talk(props) {
             }
             break;
           case "youtube":
-            if (change.type !== "added" && changed.data().play) {
+            if (changed.data().play) {
               tvControlUtil.launchYoutube();
               setDoc(doc(db, "thinq_talk", "youtube"), {
                 play: false,
@@ -39,7 +42,7 @@ function Talk(props) {
             }
             break;
           case "message_type":
-            if (change.type !== "added" && changed.data().type === "gallery") {
+            if (changed.data().type === "gallery") {
               tvControlUtil.launchOneshotOverlay("image", () => {
                 setDoc(doc(db, "thinq_talk", "message_type"), {
                   type: "slider",
