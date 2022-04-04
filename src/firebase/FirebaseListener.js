@@ -1,9 +1,10 @@
 import { doc, writeBatch } from "firebase/firestore";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { tvControlUtil } from "../util/tvControlUtil";
-import { db } from "./firebase";
+import { db, storage } from "./firebase";
 
 function FirebaseListener(props) {
+  const [src, setSrc] = useState("");
   const onReceiveHooking = (from, text) => {
     console.log("kks", "onReceiveHooking", from, text);
     tvControlUtil.launchOneshotOverlay("kakaotalk", () => {
@@ -19,10 +20,27 @@ function FirebaseListener(props) {
     });
   };
 
+  const onSelectImages = (base64Image) => {
+    window.cordova.plugins.TVConnect.toast(
+      "onSelectImages" + (base64Image ? JSON.stringify(base64Image) : "")
+    );
+    setSrc("data:image/;base64,"+base64Image);
+    //const listRef = ref(storage, "Device.tv");
+  }
+
   useEffect(() => {
     window.onReceiveHooking = onReceiveHooking;
   }, [onReceiveHooking]);
-  return null;
+
+  useEffect(() => {
+    console.log("kks", "set onSelectImages");
+    window.onSelectImages = onSelectImages;
+  }, [onSelectImages]);
+
+  return <>
+    HI
+    <img src={src} />
+  </>;
 }
 
 export default FirebaseListener;

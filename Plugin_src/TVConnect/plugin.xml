@@ -29,7 +29,7 @@
         </intent-filter>
       </receiver>
       <activity android:name="com.lge.mbsu.tvconnect.SharingActivity" android:theme="@style/Theme.AppCompat.NoActionBar">
-        <!-- <intent-filter>
+        <intent-filter>
           <action android:name="android.intent.action.SEND" />
           <category android:name="android.intent.category.DEFAULT" />
           <data android:mimeType="text/plain" />
@@ -43,7 +43,7 @@
             <action android:name="android.intent.action.SEND_MULTIPLE" />
             <category android:name="android.intent.category.DEFAULT" />
             <data android:mimeType="image/*" />
-        </intent-filter> -->
+        </intent-filter>
       </activity>
       <service android:name="com.lge.mbsu.tvconnect.hooking.HubNotificationService"
         android:exported="false"
@@ -54,7 +54,7 @@
         </intent-filter>
       </service>
     </config-file>
-    <config-file target="AndroidManifest.xml" parent="/manifest/application/activity[@android:name='MainActivity']">
+    <!-- <config-file target="AndroidManifest.xml" parent="/manifest/application/activity[@android:name='MainActivity']">
       <intent-filter>
           <action android:name="android.intent.action.SEND" />
           <category android:name="android.intent.category.DEFAULT" />
@@ -70,7 +70,7 @@
             <category android:name="android.intent.category.DEFAULT" />
             <data android:mimeType="image/*" />
         </intent-filter>
-    </config-file>
+    </config-file> -->
     <source-file src="src/android/TVConnect.java" target-dir="src/com/lge/mbsu/tvconnect" />
     <source-file src="src/android/ICDVInterface.java" target-dir="src/com/lge/mbsu/tvconnect" />
     <source-file src="src/android/SharingActivity.java" target-dir="src/com/lge/mbsu/tvconnect" />

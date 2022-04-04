@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics, logEvent } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   // firebase 설정과 관련된 개인 정보
@@ -18,8 +19,8 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
 // firebase의 firestore 인스턴스를 변수에 저장
-//const storage = getStorage();
+const storage = getStorage();
 const db = getFirestore();
 
 // 필요한 곳에서 사용할 수 있도록 내보내기
-export { db };
+export { storage, db };

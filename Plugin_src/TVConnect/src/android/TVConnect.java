@@ -38,20 +38,21 @@ public class TVConnect extends CordovaPlugin {
     private static final int LAUNCH_WEBAPP = 1;
     private static final int GOTO = 2;
     private static final int ON_NOTI_HOOKING = 3;
+    private static final int ON_SELECT_IMAGES = 4;
 
     private boolean mIsDeviceReady = false;
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
-            if (!mIsDeviceReady) {
-                Log.e("2MB", "TVConnect handleMessage mIsDeviceReady is false. retry...");
-                Message newMessage = mHandler.obtainMessage();
-                newMessage.what = msg.what;
-                newMessage.arg1 = msg.arg1;
-                newMessage.arg2 = msg.arg2;
-                newMessage.obj = msg.obj;
-                mHandler.sendMessageDelayed(newMessage, 100);
-                return;
-            }
+            // if (!mIsDeviceReady) {
+            //     Log.e("2MB", "TVConnect handleMessage mIsDeviceReady is false. retry...");
+            //     Message newMessage = mHandler.obtainMessage();
+            //     newMessage.what = msg.what;
+            //     newMessage.arg1 = msg.arg1;
+            //     newMessage.arg2 = msg.arg2;
+            //     newMessage.obj = msg.obj;
+            //     mHandler.sendMessageDelayed(newMessage, 100);
+            //     return;
+            //}
             switch (msg.what) {
             case CONNECT_TV:
                 Log.e("2MB", "TVConnect CONNECT_TV");
@@ -78,6 +79,11 @@ public class TVConnect extends CordovaPlugin {
                 String text = bundle.getString("text", "");
                 Log.d("2MB", from + " " + text);
                 webView.loadUrl("javascript:onReceiveHooking(\"" + from + "\", \"" + text + "\")");
+                break;
+            case ON_SELECT_IMAGES:
+                Log.e("2MB", "ON_SELECT_IMAGES");
+                String base64Image = (String) msg.obj;
+                webView.loadUrl("javascript:onSelectImages(\"" + base64Image + "\")");
                 break;
             default:
                 break;
@@ -118,6 +124,9 @@ public class TVConnect extends CordovaPlugin {
             return Boolean.TRUE;
         } else if (id.equals("onNotiHooking")) {
             mHandler.sendMessage(mHandler.obtainMessage(ON_NOTI_HOOKING, data));
+            return true;
+        } else if (id.equals("onSelectImages")) {
+            mHandler.sendMessage(mHandler.obtainMessage(ON_SELECT_IMAGES, data));
             return true;
         }
 
@@ -339,7 +348,6 @@ public class TVConnect extends CordovaPlugin {
                 }
             }
         });
-
     }
 
     public void pluginTurnOnTV() {

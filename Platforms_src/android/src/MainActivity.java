@@ -21,11 +21,15 @@ package com.lge.mbsu;
 
 import com.lge.mbsu.tvconnect.alarm.AlarmSetting;
 
+import android.Manifest;
+import android.content.ContentResolver;
 import android.os.Bundle;
+
 import org.apache.cordova.*;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -37,6 +41,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -47,6 +54,8 @@ public class MainActivity extends CordovaActivity
     {
         super.onCreate(savedInstanceState);
 
+        Intent intent = getIntent();
+
         // enable Cordova apps to be started in the background
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.getBoolean("cdvStartInBackground", false)) {
@@ -56,16 +65,24 @@ public class MainActivity extends CordovaActivity
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
 
+        Log.e("2MB", "onCreate");
         // share sheet
-        Intent intent = getIntent();
         useHooker();
-        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},0);
-        handleIntent(intent);
+        //requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},0);
+        //handleIntent(intent);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.e("2MB", "MainActivity onNewIntent");
+        //handleIntent(intent);
     }
 
     void handleIntent(Intent intent) {
         String action = intent.getAction();
         String type = intent.getType();
+        Log.e("2MB", "handleIntent action: " + action + ", type: " + type);
 
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if ("text/plain".equals(type)) {
@@ -101,33 +118,37 @@ public class MainActivity extends CordovaActivity
         Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
         if (imageUri != null) {
             // Update UI to reflect image being shared
-            Log.d("kks", "imageUri: " + imageUri);
-            Log.d("kks", "imageUri: " + getPath(imageUri));
+            //Log.d("kks", "imageUri: " + getPath(imageUri));
+            String base64Image = getBase64(imageUri);
+            Log.d("2MB", "imageUri: " + base64Image);
+            appView.getPluginManager().postMessage("onSelectImages", "base64Image");
         }
     }
 
-    public String getPath(Uri uri){ //
-        // String [] proj = {MediaStore.Images.Media.DATA};
-        // CursorLoader cursorLoader = new CursorLoader(this, uri, proj, null, null, null);
-
-        // Cursor cursor = cursorLoader.loadInBackground();
-        // int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        // cursor.moveToFirst();
-        // return cursor.getString(index);
-        // Open a specific media item using InputStream.
+    public String getBase64(Uri uri) {
         ContentResolver resolver = getApplicationContext().getContentResolver();
+        byte[] resBytes = null;
         try (InputStream stream = resolver.openInputStream(uri)) {
             // Perform operations on "stream".
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+            int nRead;
+            byte[] data = new byte[1024];
+            while ((nRead = stream.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+            buffer.flush();
+            resBytes = buffer.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return Base64.encodeToString(resBytes, 1);
     }
 
     void handleSendMultipleImages(Intent intent) {
         ArrayList<Uri> imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
         if (imageUris != null) {
             // Update UI to reflect multiple images being shared
-            for (int i=0; i<imageUris.size(); i++) {
-                Log.d("kks", "imageUri["+i+"]: " + imageUris.get(i));
-            }
         }
     }
 
