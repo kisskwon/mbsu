@@ -9,7 +9,7 @@ import { useSetRecoilState } from "recoil";
 import { NetflixData } from "../../data/CrawlData";
 
 const Image = styled("img")({
-  width: "100%"
+  width: "100%",
 });
 
 const getHttpsUrl = (url) => {
@@ -70,7 +70,7 @@ function NetflixInformation(props) {
         setData({
           title: res.title,
           imageUrl: res.imageUrl,
-          synopsis: res.synopsis
+          synopsis: res.synopsis,
         });
         setLoading(false);
 
@@ -80,7 +80,7 @@ function NetflixInformation(props) {
           title: res.title,
           titleid: titleId,
           summary: res.synopsis,
-          url: res.imageUrl
+          url: res.imageUrl,
         });
       });
   };
