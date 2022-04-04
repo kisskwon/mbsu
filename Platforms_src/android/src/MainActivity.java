@@ -19,11 +19,15 @@
 
 package com.lge.mbsu;
 
+import com.lge.mbsu.tvconnect.alarm.AlarmSetting;
+
 import android.os.Bundle;
 import org.apache.cordova.*;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationManagerCompat;
 
@@ -33,6 +37,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 public class MainActivity extends CordovaActivity
@@ -50,7 +55,80 @@ public class MainActivity extends CordovaActivity
 
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
+
+        // share sheet
+        Intent intent = getIntent();
         useHooker();
+        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},0);
+        handleIntent(intent);
+    }
+
+    void handleIntent(Intent intent) {
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+                handleSendText(intent); // Handle text being sent
+            } else if (type.startsWith("image/")) {
+                handleSendImage(intent); // Handle single image being sent
+            }
+        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+            if (type.startsWith("image/")) {
+                handleSendMultipleImages(intent); // Handle multiple images being sent
+            }
+        }
+    }
+
+    void handleSendText(Intent intent) {
+      String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+  
+      if (appView != null && appView.isInitialized() && sharedText != null) {
+        appView.getPluginManager().postMessage("setCDVInterface", AlarmSetting.getInstance(this));
+        Log.e("2MB", "go add reminder");
+        Toast.makeText(this, sharedText, Toast.LENGTH_SHORT).show();
+  
+        int mode = 0; //mode normal
+        if (sharedText.contains("netflix")) {
+          mode = 1; //mode netflix
+        }
+  
+        AlarmSetting.getInstance(this).gotoAddReminder(mode, sharedText);
+      }
+    }
+
+    void handleSendImage(Intent intent) {
+        Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        if (imageUri != null) {
+            // Update UI to reflect image being shared
+            Log.d("kks", "imageUri: " + imageUri);
+            Log.d("kks", "imageUri: " + getPath(imageUri));
+        }
+    }
+
+    public String getPath(Uri uri){ //
+        // String [] proj = {MediaStore.Images.Media.DATA};
+        // CursorLoader cursorLoader = new CursorLoader(this, uri, proj, null, null, null);
+
+        // Cursor cursor = cursorLoader.loadInBackground();
+        // int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        // cursor.moveToFirst();
+        // return cursor.getString(index);
+        // Open a specific media item using InputStream.
+        ContentResolver resolver = getApplicationContext().getContentResolver();
+        try (InputStream stream = resolver.openInputStream(uri)) {
+            // Perform operations on "stream".
+        }
+    }
+
+    void handleSendMultipleImages(Intent intent) {
+        ArrayList<Uri> imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+        if (imageUris != null) {
+            // Update UI to reflect multiple images being shared
+            for (int i=0; i<imageUris.size(); i++) {
+                Log.d("kks", "imageUri["+i+"]: " + imageUris.get(i));
+            }
+        }
     }
 
     @Override

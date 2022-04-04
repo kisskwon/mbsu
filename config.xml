@@ -13,7 +13,7 @@
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <hook type="before_prepare" src="scripts/prebuild.js" />
-    <hook type="after_platform_add" src="scripts/updateMainActivity.js" />
+    <hook type="before_build" src="scripts/updateMainActivity.js" />
 
     <platform name="android">
         <preference name="hostname" value="localhost" />
