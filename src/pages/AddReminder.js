@@ -36,7 +36,7 @@ function AddReminder(props) {
   const webDefaulturl =
     "https://namu.wiki/w/%EA%B9%80%EA%B1%B4%ED%9D%AC/%EB%85%BC%EB%9E%80#s-2";
   const netflixData = useRecoilValue(NetflixData);
-  const webCrawlData = useRecoilValue(WebCrawlData);
+  const webCrawDataState = useRecoilValue(WebCrawlData);
   const [showProgress, setShowProgress] = useState(false);
 
   console.log("mode : " + state?.mode);
@@ -56,12 +56,11 @@ function AddReminder(props) {
   const handleSave = () => {
     let type = "shopping";
     let data = {
-      summary:
-        webCrawlData.customDescription !== ""
-          ? webCrawlData.customDescription
-          : webCrawlData.description,
-      title: webCrawlData.title,
-      url: webCrawlData.url,
+      summary: webCrawDataState.customDescription
+        ? webCrawDataState.customDescription
+        : webCrawDataState.description,
+      title: webCrawDataState.title,
+      url: webCrawDataState.url,
     };
     if (mode === REMINDER_MODE.NETFLIX) {
       console.log("netflix data :" + JSON.stringify(netflixData));
@@ -75,6 +74,7 @@ function AddReminder(props) {
     }
 
     setShowProgress(true);
+
     tvControlUtil.launchOneshotOverlay(
       type,
       () => {
@@ -117,7 +117,7 @@ function AddReminder(props) {
           doc.id,
           "----------------------"
         );
-        console.table(doc.data());
+        console.log(doc.data());
       });
     };
     logging();

@@ -19,9 +19,7 @@ function WebInformation(props) {
   let result = { title: "", imageUrl: "", description: "" };
   const [data, setData] = useState(result);
   const setWebCrawlData = useSetRecoilState(WebCrawlData);
-  const [customDescription, setCustomDescription] = useRecoilState(
-    customDescriptionSelector
-  );
+  const [, setCustomDescription] = useRecoilState(customDescriptionSelector);
   const handleChange = (e) => {
     setCustomDescription(e.target.value);
   };

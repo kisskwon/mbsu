@@ -1,13 +1,7 @@
 import styled from "@emotion/styled";
 import { List, ListItem, ListItemText, Paper } from "@mui/material";
-import {
-  collection,
-  doc,
-  onSnapshot,
-  setDoc,
-  writeBatch,
-} from "firebase/firestore";
-import React, { useEffect } from "react";
+import { doc, setDoc, writeBatch } from "firebase/firestore";
+import React from "react";
 import { db } from "../firebase/firebase";
 import MBAppBar from "../libs/components/MBAppBar";
 import { tvControlUtil } from "../util/tvControlUtil";
@@ -17,44 +11,6 @@ const StyledPaper = styled(Paper)(() => ({
 }));
 
 function Talk(props) {
-  useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "thinq_talk"), (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
-          return;
-        }
-        const changed = change.doc;
-        switch (changed.id) {
-          case "application":
-            if (!changed.data().poweron) {
-              tvControlUtil.closeWebAppOverlay();
-              setDoc(doc(db, "thinq_talk", "application"), {
-                poweron: true,
-              });
-            }
-            break;
-          case "youtube":
-            if (changed.data().play) {
-              tvControlUtil.launchYoutube();
-              setDoc(doc(db, "thinq_talk", "youtube"), {
-                play: false,
-              });
-            }
-            break;
-          case "message_type":
-            if (changed.data().type === "gallery") {
-              tvControlUtil.launchOneshotOverlay("image", () => {
-                setDoc(doc(db, "thinq_talk", "message_type"), {
-                  type: "slider",
-                });
-              });
-            }
-            break;
-        }
-      });
-    });
-    return unsubscribe;
-  }, []);
   return (
     <>
       <MBAppBar title={"Talk"} sub />

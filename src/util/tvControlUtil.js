@@ -32,9 +32,13 @@ var PROTECTED_MANIFEST = {
   ],
 };
 
-let ws;
-let currentClientKey = null;
 const REQUEST_LAUNCH_WEB_APP_OVERLAY = 10001;
+
+let ws;
+let connected = false;
+let currentClientKey = null;
+let successCallback = () => {};
+let errorCallback = () => {};
 
 function handleResponse(message) {
   var noOutput = false;
@@ -47,7 +51,10 @@ function handleResponse(message) {
   }
 
   if (message.id === REQUEST_LAUNCH_WEB_APP_OVERLAY && successCallback) {
-    setTimeout(successCallback, 2500);
+    setTimeout(() => {
+      console.log("fire successCallback");
+      successCallback();
+    }, 3000);
   }
 
   // !noOutput && updateResponseField(message);
@@ -76,7 +83,7 @@ const connect = async () => {
 
   ws.onopen = function () {
     console.log("connection established ws:", ws);
-
+    connected = true;
     if (true) {
       var request;
       if (currentClientKey) {
@@ -100,7 +107,6 @@ const connect = async () => {
   ws.onmessage = function (event) {
     try {
       var message = JSON.parse(event.data);
-      console.log(message);
       showToast("onmessage:", message);
       handleResponse(message);
     } catch (e) {
@@ -109,6 +115,7 @@ const connect = async () => {
   };
 
   ws.onerror = function (event) {
+    connected = false;
     if (errorCallback) {
       errorCallback();
     }
@@ -117,6 +124,7 @@ const connect = async () => {
   };
 
   ws.onclose = function (event) {
+    connected = false;
     showToast("connection closed", event);
   };
 
@@ -140,13 +148,14 @@ const launchWebApp = (
   );
 };
 
-let successCallback = () => {};
-let errorCallback = () => {};
-
 const launchOneshotOverlay = (opt, onSuccess, onError) => {
   successCallback = onSuccess;
   errorCallback = onError;
-  connect();
+  if (connected) {
+    launchWebAppOverlay();
+  } else {
+    connect();
+  }
 };
 
 const launchWebAppOverlay = () => {
